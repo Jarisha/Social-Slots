@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{04B34171-23A0-576F-1C75-8967D78CD1B9}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_3_5_5;UNITY_3_5;UNITY_EDITOR;ENABLE_PROFILER;UNITY_ANDROID;ENABLE_GENERICS;ENABLE_TERRAIN;ENABLE_WEBCAM;ENABLE_NETWORK;ENABLE_CLOTH;ENABLE_WWW;ENABLE_DUCK_TYPING</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="UnityEngine">
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\BMFontReader.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\ComponentSelector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\NGUIEditorTools.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\NGUIJson.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\NGUIMenu.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\NGUISelectionTools.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\NGUITransformInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIAtlasInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIAtlasMaker.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UICameraTool.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UICreateNewUIWizard.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UICreateWidgetWizard.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIDrawCallInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIFilledSpriteInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIFontInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIFontMaker.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIImageButtonInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UILabelInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIPanelInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIPanelTool.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIPopupListInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIScrollBarInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UISettings.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UISlicedSpriteInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UISliderInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UISpriteAnimationInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UISpriteInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UITextureInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UITiledSpriteInspector.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIWidgetInspector.cs" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Depth.shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (AlphaClip) .shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (AlphaClip).shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (SoftClip).shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored.shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (HardClip).shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored Overlay.shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed).shader" />
+     <None Include="Assets\Textures\UI\helvetica_bold-32.fnt.txt" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (HardClip).shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Additive Colored.shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-vs.csproj">
+      <Project>{ABD024B7-A99C-FF2B-0709-E1061B115D6B}</Project>      <Name>Assembly-CSharp-vs</Name>    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>

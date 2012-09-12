@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{ABD024B7-A99C-FF2B-0709-E1061B115D6B}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-CSharp</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_3_5_5;UNITY_3_5;UNITY_EDITOR;ENABLE_PROFILER;UNITY_ANDROID;ENABLE_GENERICS;ENABLE_TERRAIN;ENABLE_WEBCAM;ENABLE_NETWORK;ENABLE_CLOTH;ENABLE_WWW</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="UnityEngine">
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\LanguageSelection.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIButton.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIButtonColor.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIButtonKeys.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIButtonMessage.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIButtonOffset.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIButtonPlayAnimation.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIButtonRotation.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIButtonScale.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIButtonSound.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIButtonTween.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UICheckbox.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UICheckboxControlledComponent.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UICheckboxControlledObject.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIDragCamera.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIDragObject.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIDragPanelContents.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIDraggableCamera.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIDraggablePanel.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIForwardEvents.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIGrid.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIImageButton.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIInputValidator.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIPopupList.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UISavedOption.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UIScrollBar.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UISlider.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UISliderColors.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Interaction\UITable.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\ActiveAnimation.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\AnimationOrTween.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\BMFont.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\BMGlyph.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\BMSymbol.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\BetterList.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\ByteReader.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\IgnoreTimeScale.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\Localization.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\NGUIDebug.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\NGUIMath.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\NGUITools.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\SpringPanel.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\UIDrawCall.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\UIEventListener.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\UIGeometry.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\UINode.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\UIWidget.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Internal\UpdateManager.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Tweening\SpringPosition.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Tweening\TweenColor.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Tweening\TweenPosition.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Tweening\TweenRotation.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Tweening\TweenScale.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Tweening\TweenTransform.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Tweening\TweenVolume.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\Tweening\UITweener.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIAnchor.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIAtlas.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UICamera.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIFilledSprite.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIFont.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIInput.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIInputSaved.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UILabel.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UILocalize.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIOrthoCamera.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIPanel.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIRoot.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UISlicedSprite.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UISprite.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UISpriteAnimation.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIStretch.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UITextList.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UITexture.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UITiledSprite.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UITooltip.cs" />
+     <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIViewport.cs" />
+     <Compile Include="Assets\Source\GameUI.cs" />
+     <Compile Include="Assets\Source\Reel.cs" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Depth.shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (AlphaClip) .shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (AlphaClip).shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (SoftClip).shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored.shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (HardClip).shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored Overlay.shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed).shader" />
+     <None Include="Assets\Textures\UI\helvetica_bold-32.fnt.txt" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (HardClip).shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Additive Colored.shader" />
+     <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>
