@@ -77,6 +77,23 @@ MonoBehaviour:
     outer:
       serializedVersion: 2
       x: 513
+      y: 895
+      width: 54
+      height: 64
+    inner:
+      serializedVersion: 2
+      x: 513
+      y: 895
+      width: 54
+      height: 64
+    paddingLeft: .0925925896
+    paddingRight: .0925925896
+    paddingTop: 0
+    paddingBottom: 0
+  - name: left_arrow-01
+    outer:
+      serializedVersion: 2
+      x: 513
       y: 830
       width: 54
       height: 64
@@ -90,21 +107,89 @@ MonoBehaviour:
     paddingRight: .0925925896
     paddingTop: 0
     paddingBottom: 0
-  - name: left_arrow-01
+  - name: marker-right-01
     outer:
       serializedVersion: 2
       x: 513
-      y: 895
-      width: 54
-      height: 64
+      y: 780
+      width: 16
+      height: 16
     inner:
       serializedVersion: 2
       x: 513
-      y: 895
-      width: 54
-      height: 64
-    paddingLeft: .0925925896
-    paddingRight: .0925925896
+      y: 780
+      width: 16
+      height: 16
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: marker-left-01
+    outer:
+      serializedVersion: 2
+      x: 546
+      y: 813
+      width: 16
+      height: 16
+    inner:
+      serializedVersion: 2
+      x: 546
+      y: 813
+      width: 16
+      height: 16
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: black
+    outer:
+      serializedVersion: 2
+      x: 578
+      y: 992
+      width: 32
+      height: 32
+    inner:
+      serializedVersion: 2
+      x: 579
+      y: 993
+      width: 30
+      height: 30
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: text_field_bg
+    outer:
+      serializedVersion: 2
+      x: 578
+      y: 959
+      width: 32
+      height: 32
+    inner:
+      serializedVersion: 2
+      x: 581
+      y: 962
+      width: 26
+      height: 26
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: pure_white
+    outer:
+      serializedVersion: 2
+      x: 513
+      y: 797
+      width: 32
+      height: 32
+    inner:
+      serializedVersion: 2
+      x: 514
+      y: 798
+      width: 30
+      height: 30
+    paddingLeft: 0
+    paddingRight: 0
     paddingTop: 0
     paddingBottom: 0
   mCoordinates: 0

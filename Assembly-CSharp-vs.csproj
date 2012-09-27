@@ -121,8 +121,19 @@
      <Compile Include="Assets\Addons\NGUI\Scripts\UI\UITiledSprite.cs" />
      <Compile Include="Assets\Addons\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIViewport.cs" />
-     <Compile Include="Assets\Source\GameUI.cs" />
+     <Compile Include="Assets\Source\Model\ContentManager.cs" />
+     <Compile Include="Assets\Source\Model\Player.cs" />
+     <Compile Include="Assets\Source\Networking\Messages\Auth.cs" />
+     <Compile Include="Assets\Source\Networking\Messages\AuthResponse.cs" />
+     <Compile Include="Assets\Source\Networking\Messages\Message.cs" />
+     <Compile Include="Assets\Source\Networking\Messages\Quit.cs" />
+     <Compile Include="Assets\Source\Networking\Messages\SelectGame.cs" />
+     <Compile Include="Assets\Source\Networking\Messages\Spin.cs" />
+     <Compile Include="Assets\Source\Networking\ServerConnection.cs" />
      <Compile Include="Assets\Source\Reel.cs" />
+     <Compile Include="Assets\Source\UI\GameSelectUI.cs" />
+     <Compile Include="Assets\Source\UI\GameUI.cs" />
+     <Compile Include="Assets\Source\UI\LoginUI.cs" />
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Depth.shader" />
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (AlphaClip) .shader" />
@@ -136,6 +147,9 @@
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (HardClip).shader" />
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Additive Colored.shader" />
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
+ <Reference Include="Assets\Libs\Newtonsoft.Json">
+ <HintPath>Assets\Libs\Newtonsoft.Json.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

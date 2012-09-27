@@ -74,6 +74,7 @@
      <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UITextureInspector.cs" />
      <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UITiledSpriteInspector.cs" />
      <Compile Include="Assets\Addons\NGUI\Scripts\Editor\UIWidgetInspector.cs" />
+     <Compile Include="Assets\Editor\CreatePlaneAsset.cs" />
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Depth.shader" />
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (AlphaClip) .shader" />
@@ -87,6 +88,9 @@
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (HardClip).shader" />
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Additive Colored.shader" />
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
+ <Reference Include="Assets\Libs\Newtonsoft.Json">
+ <HintPath>Assets\Libs\Newtonsoft.Json.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
