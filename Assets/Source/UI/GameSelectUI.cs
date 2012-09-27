@@ -28,7 +28,7 @@ public class GameSelectUI : MonoBehaviour {
 	void SimplePressed() {
 		var sg = new SelectGame();
 		sg.gameid = "simple";
-		ConnectionProxy.Connection.SelectGame(sg, (jo) => {
+		ConnectionProxy.Connection.SendMessage(sg, (jo) => {
 			m_shouldTransition = true;
 		});
 	}
@@ -36,5 +36,6 @@ public class GameSelectUI : MonoBehaviour {
 	void Transition() {
 		simpleGame.UpdateLabels();
 		Hide ();
+		m_shouldTransition = false;
 	}
 }

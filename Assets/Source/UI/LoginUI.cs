@@ -11,6 +11,8 @@ public class LoginUI : MonoBehaviour {
 	
 	public GameSelectUI selectionScreen;
 	
+	bool m_wasPaused = false;
+	
 	private bool m_shouldTransition = false;
 	
 	public static string[] HOSTS = {
@@ -24,6 +26,19 @@ public class LoginUI : MonoBehaviour {
 	};
 	
 	int selectedHostIdx = 0;
+	
+	void OnApplicationPause(bool val) {
+		if(val) {
+			m_wasPaused = true;
+			ConnectionProxy.Quit();
+		}
+		else {
+			if(m_wasPaused) {
+				Show();
+			}
+			m_wasPaused = false;
+		}
+	}
 	
 	void Start() {
 		SetScreenInfo();
@@ -51,7 +66,7 @@ public class LoginUI : MonoBehaviour {
 	void LoginPressed() {
 		ConnectionProxy.CreateConnection(HOSTS[selectedHostIdx], PORTS[selectedHostIdx], () => {
 			var auth = new Auth(nameInput.text.Trim());
-			ConnectionProxy.Connection.Login(auth, (jo) => {
+			ConnectionProxy.Connection.SendMessage(auth, (jo) => {
 				ContentManager.Instance.ReadPlayerInfo(jo);
 				// We use a boolean to mark the transition instead of transitioning directly
 				// since the connection is not necessarily working on the main thread.

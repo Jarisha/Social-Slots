@@ -146,7 +146,7 @@ public class GameUI : MonoBehaviour {
 		var spin = new Spin(m_lines[m_lineIdx], bet);
 		ContentManager.Instance.Player.IncrementCredits(-bet * m_lineCounts[m_lineIdx]);
 		UpdateLabels();
-		ConnectionProxy.Connection.Spin(spin, (jo) => {
+		ConnectionProxy.Connection.SendMessage(spin, (jo) => {
 			Debug.Log ("Spin done!");
 			spinData = jo;
 		});

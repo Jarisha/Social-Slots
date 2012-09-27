@@ -32,12 +32,18 @@ public class ConnectionProxy {
 	public static void Quit() {
 		if(sm_con != null) {
 			if(sm_con.IsConnected()) {
-				sm_con.SendMessage(new Quit(), (jo) => {
-					sm_con.Disconnect();
-					sm_con = null;
-				});
+				sm_con.SendMessage(new Quit());
+				sm_con.Disconnect();
+				sm_con = null;
 			}
 			sm_con = null;
+		}
+	}
+	
+	public static void PrintDebugInfo() {
+		Debug.Log ("Connection: " + sm_con);
+		if(sm_con != null) {
+			Debug.Log ("Connected: " + sm_con.IsConnected());
 		}
 	}
 	
@@ -53,6 +59,7 @@ public class ServerConnection {
 	public bool quit = false;
 	
 	protected Socket m_socket;
+	protected Thread m_recvThread;
 	
 	private Action<JObject> m_pendingCallback;
 	private bool m_hasCallback = true;
@@ -66,11 +73,15 @@ public class ServerConnection {
 	}
 	
 	public void Disconnect() {
+		m_recvThread.Abort();
+		m_socket.Disconnect(false);
 		m_socket.Close();
+		quit = true;
+		m_recvDone.Set ();
 	}
 	
 	public bool IsConnected() {
-		return m_socket.Connected;
+		return m_socket != null && m_socket.Connected;
 	}
 	
 	void ConnectionComplete(IAsyncResult results) {
@@ -82,59 +93,8 @@ public class ServerConnection {
 	}
 	
 	void StartRecvThread() {
-		var thread = new Thread(RecvLoop);
-		thread.Start ();
-	}
-	
-	public void Login(Auth auth, Action<JObject> callback) {
-		Debug.Log ("Sending auth");
-		var toSend = auth.ToByteArray();
-		m_socket.BeginSend (toSend, 0, toSend.Length, SocketFlags.None, LoginFinished, null);
-		m_pendingCallback = callback;
-		m_hasCallback = true;
-	}
-	
-	public void LoginFinished(IAsyncResult results) {
-		Debug.Log ("Done sending auth");
-		var amt = m_socket.EndSend (results);
-		Debug.Log ("Amount sent for auth: " + amt);
-		SocketError errorCode;
-		m_socket.EndSend(results, out errorCode);
-		Debug.Log (errorCode);
-	}
-	
-	public void SelectGame(SelectGame sg, Action<JObject> callback) {
-		Debug.Log ("Sending select game");
-		var toSend = sg.ToByteArray();
-		m_socket.BeginSend (toSend, 0, toSend.Length, SocketFlags.None, LoginFinished, null);
-		m_pendingCallback = callback;
-		m_hasCallback = true;
-	}
-	
-	public void SelectGameFinished(IAsyncResult results) {
-		Debug.Log ("Done sending select game");
-		var amt = m_socket.EndSend (results);
-		Debug.Log ("Amount sent for select game: " + amt);
-		SocketError errorCode;
-		m_socket.EndSend(results, out errorCode);
-		Debug.Log (errorCode);
-	}
-	
-	public void Spin(Spin spin, Action<JObject> callback) {
-		Debug.Log ("Sending spin");
-		var toSend = spin.ToByteArray();
-		m_socket.BeginSend (toSend, 0, toSend.Length, SocketFlags.None, LoginFinished, null);
-		m_pendingCallback = callback;
-		m_hasCallback = true;
-	}
-	
-	public void SpinFinished(IAsyncResult results) {
-		Debug.Log ("Done sending spin");
-		var amt = m_socket.EndSend (results);
-		Debug.Log ("Amount sent for spin: " + amt);
-		SocketError errorCode;
-		m_socket.EndSend(results, out errorCode);
-		Debug.Log (errorCode);
+		m_recvThread = new Thread(RecvLoop);
+		m_recvThread.Start ();
 	}
 	
 	public void SendMessage(Message m, Action<JObject> callback = null) {
@@ -142,7 +102,7 @@ public class ServerConnection {
 		Debug.Log(string.Format("{0}: sending {1} bytes", m.GetType(), toSend.Length));
 		m_socket.BeginSend (toSend, 0, toSend.Length, SocketFlags.None, SendMessageFinished, m);
 		if(callback != null) {
-			m_pendingCallback = DoCallback;
+			m_pendingCallback = callback;
 			m_hasCallback = true;
 		}
 		else {
@@ -158,12 +118,17 @@ public class ServerConnection {
 	}
 	
 	public void RecvLoop() {
-		while(m_socket.Connected && !quit) {
-			Debug.Log ("Starting recv");
-			m_recvDone.Reset ();
-			RecvStateObject state = new RecvStateObject();
-			m_socket.BeginReceive(state.buffer, state.readAmount, RecvStateObject.MAX_BUF_SIZE, SocketFlags.None, DataReceived, state);
-			m_recvDone.WaitOne();
+		try {
+			while(m_socket.Connected && !quit) {
+				Debug.Log ("Starting recv");
+				m_recvDone.Reset ();
+				RecvStateObject state = new RecvStateObject();
+				m_socket.BeginReceive(state.buffer, state.readAmount, RecvStateObject.MAX_BUF_SIZE, SocketFlags.None, DataReceived, state);
+				m_recvDone.WaitOne();
+			}
+		}
+		catch(ThreadAbortException tae) {
+			Debug.Log ("Caught " + tae.GetType ().Name + " -- aborting recv thread");
 		}
 	}
 	
