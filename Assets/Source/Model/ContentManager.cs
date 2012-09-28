@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using LitJson;
 
 public class ContentManager {
 	
@@ -21,7 +21,7 @@ public class ContentManager {
 	private ContentManager() {
 	}
 	
-	public void ReadPlayerInfo(JObject jo) {
-		Player = new Player(jo["player"].ToObject<JObject>());
+	public void ReadPlayerInfo(JsonData jdata) {
+		Player = new Player((JsonData)jdata["player"]);
 	}
 }

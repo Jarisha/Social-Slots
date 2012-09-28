@@ -4,8 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using LitJson;
 
 public class Quit : Message {
 	
@@ -20,7 +19,7 @@ public class Quit : Message {
 		var data = new Dictionary<string, string>() {
 			{"type", GetMessageType()}
 		};
-		var dataString = JsonConvert.SerializeObject(data);
+		var dataString = JsonMapper.ToJson(data);
 		var bytes = System.Text.Encoding.UTF8.GetBytes(dataString);
 		var count = bytes.Length;
 		var countBytes = System.BitConverter.GetBytes(count);

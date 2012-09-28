@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 [System.Serializable]
 public class Payline {
@@ -18,6 +16,8 @@ public class Payline {
 }
 
 public class GameUI : MonoBehaviour {
+	
+	public MachineInfo info;
 
 	public Reel reel0;
 	public Reel reel1;
@@ -57,7 +57,7 @@ public class GameUI : MonoBehaviour {
 	
 	public UILabel creditsLabel;
 	
-	JObject spinData = null;
+	SpinResponse spinData = null;
 	bool spinning = false;
 	
 	void Start() {
@@ -87,7 +87,7 @@ public class GameUI : MonoBehaviour {
 	}
 	
 	void HandleSpinResults() {
-		var winAmount = (int)spinData["results"]["results"]["total_credits"];
+		var winAmount = spinData.totalCredits;
 		ContentManager.Instance.Player.IncrementCredits(winAmount);
 		if(winAmount > 0) {
 			m_lastWin = winAmount;
@@ -117,11 +117,11 @@ public class GameUI : MonoBehaviour {
 	}
 	
 	void SetTargets() {
-		reel0.SetTarget((ReelStop)(int)spinData["results"]["reels"][0]);
-		reel1.SetTarget((ReelStop)(int)spinData["results"]["reels"][1]);
-		reel2.SetTarget((ReelStop)(int)spinData["results"]["reels"][2]);
-		reel3.SetTarget((ReelStop)(int)spinData["results"]["reels"][3]);
-		reel4.SetTarget((ReelStop)(int)spinData["results"]["reels"][4]);
+		reel0.SetTarget(spinData.reels[0]);
+		reel1.SetTarget(spinData.reels[1]);
+		reel2.SetTarget(spinData.reels[2]);
+		reel3.SetTarget(spinData.reels[3]);
+		reel4.SetTarget(spinData.reels[4]);
 		spinning = false;
 	}
 	
@@ -146,9 +146,10 @@ public class GameUI : MonoBehaviour {
 		var spin = new Spin(m_lines[m_lineIdx], bet);
 		ContentManager.Instance.Player.IncrementCredits(-bet * m_lineCounts[m_lineIdx]);
 		UpdateLabels();
-		ConnectionProxy.Connection.SendMessage(spin, (jo) => {
+		ConnectionProxy.Connection.SendMessage(spin, (jdata) => {
 			Debug.Log ("Spin done!");
-			spinData = jo;
+			Debug.Log (jdata["results"]);
+			spinData = new SpinResponse(jdata);
 		});
 	}
 	
@@ -173,5 +174,9 @@ public class GameUI : MonoBehaviour {
 	void UpdateButtonInfo() {
 		betButtonLabel.text = string.Format ("Bet:\n{0}", m_betAmounts[m_betIdx]);
 		lineButtonLabel.text = string.Format ("Lines:\n{0}", m_lineCounts[m_lineIdx]);
+	}
+	
+	public void ResetWithResponse(SelectGameResponse resp) {
+		info = resp.machine;
 	}
 }

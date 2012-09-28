@@ -18,7 +18,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_3_5_6;UNITY_3_5;UNITY_EDITOR;ENABLE_PROFILER;UNITY_ANDROID;ENABLE_GENERICS;ENABLE_TERRAIN;ENABLE_WEBCAM;ENABLE_NETWORK;ENABLE_CLOTH;ENABLE_WWW</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_3_5_6;UNITY_3_5;UNITY_EDITOR;ENABLE_PROFILER;UNITY_IOS;UNITY_IPHONE;ENABLE_GENERICS;ENABLE_TERRAIN;ENABLE_WEBCAM;ENABLE_MICROPHONE;ENABLE_NETWORK;ENABLE_CLOTH;ENABLE_WWW</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -121,14 +121,25 @@
      <Compile Include="Assets\Addons\NGUI\Scripts\UI\UITiledSprite.cs" />
      <Compile Include="Assets\Addons\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\Addons\NGUI\Scripts\UI\UIViewport.cs" />
+     <Compile Include="Assets\Libs\LitJson\IJsonWrapper.cs" />
+     <Compile Include="Assets\Libs\LitJson\JsonData.cs" />
+     <Compile Include="Assets\Libs\LitJson\JsonException.cs" />
+     <Compile Include="Assets\Libs\LitJson\JsonMapper.cs" />
+     <Compile Include="Assets\Libs\LitJson\JsonReader.cs" />
+     <Compile Include="Assets\Libs\LitJson\JsonWriter.cs" />
+     <Compile Include="Assets\Libs\LitJson\Lexer.cs" />
+     <Compile Include="Assets\Libs\LitJson\ParserToken.cs" />
      <Compile Include="Assets\Source\Model\ContentManager.cs" />
+     <Compile Include="Assets\Source\Model\MachineInfo.cs" />
      <Compile Include="Assets\Source\Model\Player.cs" />
      <Compile Include="Assets\Source\Networking\Messages\Auth.cs" />
-     <Compile Include="Assets\Source\Networking\Messages\AuthResponse.cs" />
      <Compile Include="Assets\Source\Networking\Messages\Message.cs" />
      <Compile Include="Assets\Source\Networking\Messages\Quit.cs" />
      <Compile Include="Assets\Source\Networking\Messages\SelectGame.cs" />
      <Compile Include="Assets\Source\Networking\Messages\Spin.cs" />
+     <Compile Include="Assets\Source\Networking\Responses\AuthResponse.cs" />
+     <Compile Include="Assets\Source\Networking\Responses\SelectGameResponse.cs" />
+     <Compile Include="Assets\Source\Networking\Responses\SpinResponse.cs" />
      <Compile Include="Assets\Source\Networking\ServerConnection.cs" />
      <Compile Include="Assets\Source\Reel.cs" />
      <Compile Include="Assets\Source\UI\GameSelectUI.cs" />
@@ -147,9 +158,6 @@
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (HardClip).shader" />
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Additive Colored.shader" />
      <None Include="Assets\Addons\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
- <Reference Include="Assets\Libs\Newtonsoft.Json">
- <HintPath>Assets\Libs\Newtonsoft.Json.dll</HintPath>
- </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

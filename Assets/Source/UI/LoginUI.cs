@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+using System.Net;
 
 public class LoginUI : MonoBehaviour {
 	
@@ -17,7 +16,7 @@ public class LoginUI : MonoBehaviour {
 	
 	public static string[] HOSTS = {
 		"socialslots.rjevans.net",
-		"localhost"
+		"127.0.0.1"
 	};
 	
 	public static int[] PORTS = {
@@ -65,9 +64,11 @@ public class LoginUI : MonoBehaviour {
 	
 	void LoginPressed() {
 		ConnectionProxy.CreateConnection(HOSTS[selectedHostIdx], PORTS[selectedHostIdx], () => {
+			Debug.Log ("Callback from connect");
 			var auth = new Auth(nameInput.text.Trim());
-			ConnectionProxy.Connection.SendMessage(auth, (jo) => {
-				ContentManager.Instance.ReadPlayerInfo(jo);
+			Debug.Log ("Calling auth");
+			ConnectionProxy.Connection.SendMessage(auth, (jdata) => {
+				ContentManager.Instance.ReadPlayerInfo(jdata);
 				// We use a boolean to mark the transition instead of transitioning directly
 				// since the connection is not necessarily working on the main thread.
 				m_shouldTransition = true;

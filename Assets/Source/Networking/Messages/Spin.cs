@@ -4,8 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using LitJson;
 
 public class Spin : Message {
 	
@@ -27,7 +26,7 @@ public class Spin : Message {
 			{"lines", lines},
 			{"bet", bet}
 		};
-		var dataString = JsonConvert.SerializeObject(data);
+		var dataString = JsonMapper.ToJson(data);
 		var bytes = System.Text.Encoding.UTF8.GetBytes(dataString);
 		var count = bytes.Length;
 		var countBytes = System.BitConverter.GetBytes(count);

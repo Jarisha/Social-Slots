@@ -2,9 +2,9 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Collections.Generic;
 using UnityEngine;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using LitJson;
 
 public class RecvStateObject {
 	public const int MAX_BUF_SIZE = 65536;
@@ -61,7 +61,7 @@ public class ServerConnection {
 	protected Socket m_socket;
 	protected Thread m_recvThread;
 	
-	private Action<JObject> m_pendingCallback;
+	private Action<JsonData> m_pendingCallback;
 	private bool m_hasCallback = true;
 	
 	public ManualResetEvent m_recvDone = new ManualResetEvent(false);
@@ -88,6 +88,7 @@ public class ServerConnection {
 		Debug.Log("Connected!");
 		StartRecvThread();
 		var callback = results.AsyncState as Action;
+		Debug.Log ("Done kicking off recv thread");
 		callback();
 		
 	}
@@ -97,8 +98,10 @@ public class ServerConnection {
 		m_recvThread.Start ();
 	}
 	
-	public void SendMessage(Message m, Action<JObject> callback = null) {
+	public void SendMessage(Message m, Action<JsonData> callback = null) {
+		Debug.Log ("In send message");
 		var toSend = m.ToByteArray();
+		Debug.Log ("Got byte array");
 		Debug.Log(string.Format("{0}: sending {1} bytes", m.GetType(), toSend.Length));
 		m_socket.BeginSend (toSend, 0, toSend.Length, SocketFlags.None, SendMessageFinished, m);
 		if(callback != null) {
@@ -164,12 +167,18 @@ public class ServerConnection {
 		Debug.Log("Done getting packet");
 		var jsonText = System.Text.Encoding.UTF8.GetString(state.buffer, 4, state.length);
 		Debug.Log (jsonText);
-		var jobj = JObject.Parse (jsonText);
-		DoCallback(jobj);
+		JsonData obj = null;
+		try {
+			obj = JsonMapper.ToObject(jsonText);
+		}
+		catch(Exception e) {
+			Debug.LogWarning (e.ToString());
+		}
+		DoCallback(obj);
 		m_recvDone.Set();
 	}
 	
-	void DoCallback(JObject jo) {
+	void DoCallback(JsonData jo) {
 		if(m_hasCallback) {
 			m_pendingCallback(jo);
 			m_pendingCallback = null;
