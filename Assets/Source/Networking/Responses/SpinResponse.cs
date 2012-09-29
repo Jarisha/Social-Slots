@@ -16,7 +16,7 @@ public class SpinResponse {
 	public int xp;
 	public int totalCredits;
 	public List<LinePayout> lines;
-	public ReelStop[] reels;
+	public int[] reels;
 	
 	public SpinResponse(JsonData data) {
 		var results = (JsonData)data["results"];
@@ -24,13 +24,13 @@ public class SpinResponse {
 		Debug.Log ("Parsing reel data");
 		var reelData = (IList)results["reels"];
 		Debug.Log ("Reel data: " + reelData);
-		reels = new ReelStop[5];
+		reels = new int[5];
 		for(int i = 0; i < 5; i++) {
 			var jd = (JsonData)reelData[i];
 			Debug.Log (jd.GetJsonType());
 			var id = (int)jd;
 			Debug.Log ("Reel " + i + ": " + id);
-			reels[i] = (ReelStop)id;
+			reels[i] = id;
 		}
 		
 		Debug.Log ("Parsing results");

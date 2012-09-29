@@ -18,12 +18,8 @@ public class Payline {
 public class GameUI : MonoBehaviour {
 	
 	public MachineInfo info;
-
-	public Reel reel0;
-	public Reel reel1;
-	public Reel reel2;
-	public Reel reel3;
-	public Reel reel4;
+	
+	public Reel[] reels;
 	
 	public UILabel betButtonLabel;
 	public UILabel lineButtonLabel;
@@ -117,11 +113,11 @@ public class GameUI : MonoBehaviour {
 	}
 	
 	void SetTargets() {
-		reel0.SetTarget(spinData.reels[0]);
-		reel1.SetTarget(spinData.reels[1]);
-		reel2.SetTarget(spinData.reels[2]);
-		reel3.SetTarget(spinData.reels[3]);
-		reel4.SetTarget(spinData.reels[4]);
+		reels[0].SetTarget(spinData.reels[0]);
+		reels[1].SetTarget(spinData.reels[1]);
+		reels[2].SetTarget(spinData.reels[2]);
+		reels[3].SetTarget(spinData.reels[3]);
+		reels[4].SetTarget(spinData.reels[4]);
 		spinning = false;
 	}
 	
@@ -131,11 +127,11 @@ public class GameUI : MonoBehaviour {
 	
 	void SpinPressed() {
 		Spin();
-		reel0.StartSpin(0);
-		reel1.StartSpin(0.1f);
-		reel2.StartSpin(0.2f);
-		reel3.StartSpin(0.3f);
-		reel4.StartSpin(0.4f);
+		reels[0].StartSpin(0);
+		reels[1].StartSpin(0.1f);
+		reels[2].StartSpin(0.2f);
+		reels[3].StartSpin(0.3f);
+		reels[4].StartSpin(0.4f);
 	}
 	
 	void Spin() {
@@ -178,5 +174,19 @@ public class GameUI : MonoBehaviour {
 	
 	public void ResetWithResponse(SelectGameResponse resp) {
 		info = resp.machine;
+		var iconMaker = IconGenerator.Instance();
+		for(var i = 0; i < 5; i++) {
+			var reelInfo = info.m_reels[i];
+			var reel = reels[i];
+			for(var j = 0; j < reelInfo.Count; j++) {
+				var slotIdx = reelInfo[j];
+				var slotName = info.NameForIndex(slotIdx);
+				var icon = iconMaker.CreateIcon(slotName);
+				reel.stops.Add (slotIdx);
+				reel.icons.Add (icon);
+				icon.transform.parent = reel.transform;
+				icon.transform.localPosition = new Vector3(0, j * 100, 0);
+			}
+		}
 	}
 }

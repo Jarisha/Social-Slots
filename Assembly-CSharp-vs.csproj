@@ -129,6 +129,7 @@
      <Compile Include="Assets\Libs\LitJson\JsonWriter.cs" />
      <Compile Include="Assets\Libs\LitJson\Lexer.cs" />
      <Compile Include="Assets\Libs\LitJson\ParserToken.cs" />
+     <Compile Include="Assets\Source\IconGenerator.cs" />
      <Compile Include="Assets\Source\Model\ContentManager.cs" />
      <Compile Include="Assets\Source\Model\MachineInfo.cs" />
      <Compile Include="Assets\Source\Model\Player.cs" />

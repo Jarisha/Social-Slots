@@ -2,16 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum ReelStop {
-	Cherry = 0,
-	Bell = 1,
-	Bar = 2,
-	DoubleBar = 3,
-	TripleBar = 4,
-	Seven = 5,
-	Special = 6
-}
-
 public enum SpinState {
 	Delay,
 	Spinning,
@@ -26,12 +16,12 @@ public class Reel : MonoBehaviour {
 	public float deceleration;
 	public float maxVelocity;
 	public float minVelocity;
-	public ReelStop[] stops;
+	public List<int> stops;
 	public List<GameObject> icons;
 	
 	bool isSpinning;
 	float velocity;
-	ReelStop target;
+	int target;
 	float spinningFor;
 	SpinState state;
 	float delay;
@@ -44,6 +34,7 @@ public class Reel : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		icons = new List<GameObject>();
 		isSpinning = false;
 	}
 	
@@ -80,7 +71,7 @@ public class Reel : MonoBehaviour {
 	}
 	
 	int IndexOfTarget() {
-		for(var i = 0; i < stops.Length; i++) {
+		for(var i = 0; i < stops.Count; i++) {
 			if(stops[i] == target) {
 				return i;
 			}
@@ -184,7 +175,7 @@ public class Reel : MonoBehaviour {
 		isSpinning = true;
 	}
 	
-	public void SetTarget(ReelStop target) {
+	public void SetTarget(int target) {
 		this.target = target;
 		haveTarget = true;
 	}
