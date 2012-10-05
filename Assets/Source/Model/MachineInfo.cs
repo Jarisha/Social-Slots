@@ -9,11 +9,21 @@ public class MachineInfo {
 	public Dictionary<string, int> m_slots;
 	public List<List<int>> m_reels;
 	public List<List<int>> m_lines;
+	public List<Payout> m_payouts;
 	
 	public MachineInfo(JsonData data) {
 		ParseSlots(data["slots"]);
 		ParseReels((IList)data["reels"]);
-		ParseLines((IList)data["lines"]);
+		//ParseLines((IList)data["lines"]);
+		ParsePayouts((IList)data["payouts"]);
+	}
+	
+	void ParsePayouts(IList payoutArray) {
+		m_payouts = new List<Payout>();
+		for(var i = 0; i < payoutArray.Count; i++) {
+			var jd = (JsonData)payoutArray[i];
+			m_payouts.Add (new Payout(jd));
+		}
 	}
 	
 	void ParseLines(IList lineArray) {

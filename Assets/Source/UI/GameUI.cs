@@ -2,20 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class Payline {
-	public GameObject left;
-	public GameObject right;
-	public GameObject line;
-	
-	public void SetVisible(bool isVisible) {
-		left.active = isVisible;
-		right.active = isVisible;
-		line.active = isVisible;
-	}
-}
-
 public class GameUI : MonoBehaviour {
+	
+	public Material m_lineMaterial;
 	
 	public MachineInfo info;
 	
@@ -39,19 +28,28 @@ public class GameUI : MonoBehaviour {
 	};
 	
 	int[][] m_lines = {
-		new int[] {0, 1, 0},
-		new int[] {1, 1, 1}
+		new int[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		new int[] {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+		new int[] {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
+		new int[] {1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+		new int[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+		new int[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	};
 	
 	int[] m_lineCounts = {
 		1,
-		3
+		3,
+		5,
+		7,
+		9,
+		11
 	};
 	
 	int m_betIdx = 0;
 	int m_lineIdx = 1;
 	
 	public UILabel creditsLabel;
+	public UILabel payoutsLabel;
 	
 	SpinResponse spinData = null;
 	bool spinning = false;
@@ -174,10 +172,36 @@ public class GameUI : MonoBehaviour {
 	
 	public void ResetWithResponse(SelectGameResponse resp) {
 		info = resp.machine;
+		CreateReelIcons();
+		UpdateLineColors();
+		UpdateLines ();
+		UpdatePayoutInfo();
+	}
+	
+	void UpdatePayoutInfo() {
+		var toDisplay = "Payouts:\n";
+		foreach(var payout in info.m_payouts) {
+			toDisplay += payout.ToString() + "\n";
+		}
+		payoutsLabel.text = toDisplay;
+	}
+	
+	void UpdateLineColors() {
+		foreach(var line in m_visibleLines) {
+			line.UpdateColor();
+		}
+	}
+	
+	void CreateReelIcons() {
 		var iconMaker = IconGenerator.Instance();
 		for(var i = 0; i < 5; i++) {
 			var reelInfo = info.m_reels[i];
 			var reel = reels[i];
+			foreach(var icon in reel.icons) {
+				Destroy (icon);
+			}
+			reel.stops.Clear();
+			reel.icons.Clear();
 			for(var j = 0; j < reelInfo.Count; j++) {
 				var slotIdx = reelInfo[j];
 				var slotName = info.NameForIndex(slotIdx);
