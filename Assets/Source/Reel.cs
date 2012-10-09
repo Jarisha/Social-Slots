@@ -79,15 +79,19 @@ public class Reel : MonoBehaviour {
 		return -1;
 	}
 	
+	int GetNumIcons() {
+		return icons.Count;
+	}
+	
 	void FinishSpin() {
 		isSpinning = false;
 		
 		var bottom = (int)(IndexOfTarget() - 1);
 		if(bottom < 0) {
-			bottom += 7;
+			bottom += GetNumIcons();
 		}
-		for(int counter = 0; counter < 7; counter++) {
-			var idx = (bottom + counter) % 7;
+		for(int counter = 0; counter < GetNumIcons(); counter++) {
+			var idx = (bottom + counter) % GetNumIcons();
 			var yLoc = counter * 100.0f;
 			var xform = icons[idx].transform;
 			var pos = xform.localPosition;

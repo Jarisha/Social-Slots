@@ -68,7 +68,17 @@ public class GameUI : MonoBehaviour {
 		}
 	}
 	
-	void ShowSpinResults() {
+	IEnumerator ShowSpinResults() {
+		for(var i = 0; i < spinData.lines.Count; i++) {
+			var line = spinData.lines[i];
+			if(line.credits > 0) {
+				m_visibleLines[i].SetVisible(true);
+				yield return new WaitForSeconds(0.33f);
+				m_visibleLines[i].StartFadeOut(0.66f);
+				yield return new WaitForSeconds(0.66f);
+			}
+		}
+		spinButton.isEnabled = true;
 	}
 	
 	bool AllReelsFinished() {
@@ -86,9 +96,9 @@ public class GameUI : MonoBehaviour {
 		if(winAmount > 0) {
 			m_lastWin = winAmount;
 		}
+		StartCoroutine(ShowSpinResults());
 		ResetReelChecks();
 		UpdateLabels();
-		spinButton.isEnabled = true;
 	}
 	
 	public void UpdateLabels() {
@@ -163,6 +173,16 @@ public class GameUI : MonoBehaviour {
 		for(var i = 0; i < lines.Length; i++) {
 			m_visibleLines[i].SetVisible(lines[i] == 1);
 		}
+		StartCoroutine(FadeLinesAfterDelay(0.66f, 0.33f));
+	}
+	
+	IEnumerator FadeLinesAfterDelay(float delay, float fadeTime) {
+		yield return new WaitForSeconds(delay);
+		for(var i = 0; i < m_visibleLines.Count; i++) {
+			if(m_visibleLines[i].IsVisible()) {
+				m_visibleLines[i].StartFadeOut(fadeTime);
+			}
+		}
 	}
 	
 	void UpdateButtonInfo() {
@@ -180,8 +200,14 @@ public class GameUI : MonoBehaviour {
 	
 	void UpdatePayoutInfo() {
 		var toDisplay = "Payouts:\n";
-		foreach(var payout in info.m_payouts) {
-			toDisplay += payout.ToString() + "\n";
+		for(var i = 0; i < info.m_payouts.Count; i+= 2) {
+			var payout = info.m_payouts[i];
+			toDisplay += payout.ToString();
+			if(i + 1 < info.m_payouts.Count) {
+				payout = info.m_payouts[i + 1];
+				toDisplay += "        " + payout.ToString ();
+			}
+			toDisplay += "\n";
 		}
 		payoutsLabel.text = toDisplay;
 	}

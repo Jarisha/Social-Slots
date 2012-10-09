@@ -145,6 +145,7 @@ public class ServerConnection {
 		}
 		else {
 			state.readAmount += amt;
+			Debug.Log ("readAmount now: " + state.readAmount);
 			if(amt > 4) {
 				var lenBytes = new byte[4];
 				Array.Copy (state.buffer, lenBytes, 4);
@@ -152,10 +153,13 @@ public class ServerConnection {
 					Array.Reverse (lenBytes);
 				}
 				state.length = BitConverter.ToInt32 (lenBytes, 0);
+				Debug.Log ("Looking for " + state.length + " bytes");
 				state.hasDeterminedLength = true;
 			}
-			if(!state.hasDeterminedLength || (state.hasDeterminedLength && state.readAmount < state.length)) {
-				m_socket.BeginReceive(state.buffer, state.readAmount, RecvStateObject.MAX_BUF_SIZE, SocketFlags.None, DataReceived, state);
+			
+			if(!state.hasDeterminedLength || (state.hasDeterminedLength && state.readAmount < state.length + 4)) {
+				Debug.Log ("Calling BeginRecieve again");
+				m_socket.BeginReceive(state.buffer, state.readAmount, RecvStateObject.MAX_BUF_SIZE - state.readAmount, SocketFlags.None, DataReceived, state);
 			}
 			else {
 				FinishRecv(state);

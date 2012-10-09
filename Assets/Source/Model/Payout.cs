@@ -44,6 +44,14 @@ public class Payout {
 			return "Sv";
 		case "Special":
 			return "Sp";
+		case "Orange":
+			return "Or";
+		case "Lemon":
+			return "Le";
+		case "Plum":
+			return "Pl";
+		case "Wild":
+			return "W";
 		case "Any":
 			return "*";
 		default:

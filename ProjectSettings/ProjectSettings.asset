@@ -60,7 +60,7 @@ PlayerSettings:
     Others: 1
   debugUnloadMode: 0
   iPhoneBundleIdentifier: com.slimstown.slots
-  iPhoneBundleVersion: 0.3
+  iPhoneBundleVersion: 0.4
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 8
   AndroidPreferredInstallLocation: 1
