@@ -3,6 +3,7 @@ Temp
 .DS_Store
 *.userprefs
 *.apk
+*.ipa
 *.pidb
 web
 xcode
