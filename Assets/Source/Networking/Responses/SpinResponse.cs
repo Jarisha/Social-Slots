@@ -9,6 +9,10 @@ public class LinePayout {
 	public LinePayout(JsonData data) {
 		credits = (int)data["credits"];
 	}
+	
+	public LinePayout() {
+		credits = 0;
+	}
 }
 
 public class SpinResponse {
@@ -45,5 +49,12 @@ public class SpinResponse {
 			var jd = (JsonData)lineInfo[i];
 			lines.Add (new LinePayout(jd));
 		}
+	}
+	
+	public SpinResponse() {
+		xp = 0;
+		totalCredits = 0;
+		lines = new List<LinePayout>();
+		reels = new int[5];
 	}
 }

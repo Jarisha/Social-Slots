@@ -14,17 +14,20 @@ public class GameUI : MonoBehaviour {
 	public UILabel lineButtonLabel;
 	public UILabel statsLine;
 	
-	public UIButton spinButton;
+	public UIImageButton spinButton;
 	
 	public List<Payline> m_visibleLines;
 	
-	bool[] m_reelDone = {false, false, false, false, false};
+	public AudioClip spinningSound;
+	
+	bool[] m_reelDone = {true, true, true, true, true};
 	int m_lastWin = 0;
 	
 	int[] m_betAmounts = {
 		1,
 		2,
-		3
+		3,
+		5
 	};
 	
 	int[][] m_lines = {
@@ -45,11 +48,12 @@ public class GameUI : MonoBehaviour {
 		11
 	};
 	
-	int m_betIdx = 0;
-	int m_lineIdx = 1;
+	int m_betIdx = 3;
+	int m_lineIdx = 5;
 	
 	public UILabel creditsLabel;
 	public UILabel payoutsLabel;
+	public WinEffects effectPlayer;
 	
 	SpinResponse spinData = null;
 	bool spinning = false;
@@ -62,9 +66,9 @@ public class GameUI : MonoBehaviour {
 			if(spinData != null) {
 				SetTargets();
 			}
-		}
-		if(AllReelsFinished()) {
-			HandleSpinResults();
+			if(AllReelsFinished()) {
+				HandleSpinResults();
+			}
 		}
 	}
 	
@@ -72,13 +76,14 @@ public class GameUI : MonoBehaviour {
 		for(var i = 0; i < spinData.lines.Count; i++) {
 			var line = spinData.lines[i];
 			if(line.credits > 0) {
+				StartCoroutine(effectPlayer.PlayWinForLine(info.m_lines[i], line.credits));
 				m_visibleLines[i].SetVisible(true);
 				yield return new WaitForSeconds(0.33f);
 				m_visibleLines[i].StartFadeOut(0.66f);
 				yield return new WaitForSeconds(0.66f);
 			}
 		}
-		spinButton.isEnabled = true;
+		spinButton.enabled = true;
 	}
 	
 	bool AllReelsFinished() {
@@ -91,6 +96,7 @@ public class GameUI : MonoBehaviour {
 	}
 	
 	void HandleSpinResults() {
+		spinning = false;
 		var winAmount = spinData.totalCredits;
 		ContentManager.Instance.Player.IncrementCredits(winAmount);
 		if(winAmount > 0) {
@@ -117,6 +123,9 @@ public class GameUI : MonoBehaviour {
 	}
 	
 	public void ReelFinishedSpinning(int id) {
+		if(audio.isPlaying) {
+			audio.Stop();
+		}
 		m_reelDone[id] = true;
 	}
 	
@@ -126,7 +135,6 @@ public class GameUI : MonoBehaviour {
 		reels[2].SetTarget(spinData.reels[2]);
 		reels[3].SetTarget(spinData.reels[3]);
 		reels[4].SetTarget(spinData.reels[4]);
-		spinning = false;
 	}
 	
 	void OnApplicationQuit() {
@@ -134,27 +142,40 @@ public class GameUI : MonoBehaviour {
 	}
 	
 	void SpinPressed() {
+		if(spinning) {
+			return;
+		}
 		Spin();
 		reels[0].StartSpin(0);
 		reels[1].StartSpin(0.1f);
 		reels[2].StartSpin(0.2f);
 		reels[3].StartSpin(0.3f);
 		reels[4].StartSpin(0.4f);
+		audio.loop = true;
+		audio.clip = spinningSound;
+		audio.Play (17640);
 	}
 	
 	void Spin() {
-		spinButton.isEnabled = false;
+		spinButton.enabled = false;
 		spinData = null;
 		spinning = true;
 		var bet = m_betAmounts[m_betIdx];
 		var spin = new Spin(m_lines[m_lineIdx], bet);
 		ContentManager.Instance.Player.IncrementCredits(-bet * m_lineCounts[m_lineIdx]);
 		UpdateLabels();
+#if false
 		ConnectionProxy.Connection.SendMessage(spin, (jdata) => {
 			Debug.Log ("Spin done!");
 			Debug.Log (jdata["results"]);
 			spinData = new SpinResponse(jdata);
 		});
+#else
+		DemoSpinner.Spin(spin, (jdata) => {
+			ResetReelChecks();
+			spinData = new SpinResponse(jdata);
+		});
+#endif
 	}
 	
 	void BetPressed() {
@@ -186,8 +207,8 @@ public class GameUI : MonoBehaviour {
 	}
 	
 	void UpdateButtonInfo() {
-		betButtonLabel.text = string.Format ("Bet:\n{0}", m_betAmounts[m_betIdx]);
-		lineButtonLabel.text = string.Format ("Lines:\n{0}", m_lineCounts[m_lineIdx]);
+		betButtonLabel.text = m_betAmounts[m_betIdx].ToString();
+		lineButtonLabel.text = m_lineCounts[m_lineIdx].ToString();
 	}
 	
 	public void ResetWithResponse(SelectGameResponse resp) {
@@ -227,16 +248,18 @@ public class GameUI : MonoBehaviour {
 				Destroy (icon);
 			}
 			reel.stops.Clear();
-			reel.icons.Clear();
+			var newIcons = new List<GameObject>();
 			for(var j = 0; j < reelInfo.Count; j++) {
 				var slotIdx = reelInfo[j];
 				var slotName = info.NameForIndex(slotIdx);
 				var icon = iconMaker.CreateIcon(slotName);
 				reel.stops.Add (slotIdx);
-				reel.icons.Add (icon);
+				newIcons.Add (icon);
 				icon.transform.parent = reel.transform;
 				icon.transform.localPosition = new Vector3(0, j * 100, 0);
 			}
+			Debug.Log ("Setting reel " + reel.name + " to have " + newIcons.Count + " icons");
+			reel.icons = newIcons;
 		}
 	}
 }

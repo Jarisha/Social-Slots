@@ -18,6 +18,8 @@ public class Reel : MonoBehaviour {
 	public float minVelocity;
 	public List<int> stops;
 	public List<GameObject> icons;
+	public AudioClip startSound;
+	public AudioClip stopSound;
 	
 	bool isSpinning;
 	float velocity;
@@ -34,7 +36,6 @@ public class Reel : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		icons = new List<GameObject>();
 		isSpinning = false;
 	}
 	
@@ -66,6 +67,8 @@ public class Reel : MonoBehaviour {
 	void UpdateDelay() {
 		delaySpent += Time.deltaTime;
 		if(delaySpent > delay) {
+			audio.clip = startSound;
+			audio.Play ();
 			state = SpinState.Spinning;
 		}
 	}
@@ -99,6 +102,8 @@ public class Reel : MonoBehaviour {
 			xform.localPosition = pos;
 		}
 		owner.ReelFinishedSpinning(id);
+		audio.clip = stopSound;
+		audio.Play ();
 	}
 	
 	void UpdateStopping() {

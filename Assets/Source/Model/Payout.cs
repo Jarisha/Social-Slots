@@ -18,6 +18,18 @@ public class Payout {
 		}
 	}
 	
+	public bool DoesMatch(int[] spin, MachineInfo info) {
+		for(var i = 0; i < 5; i++) {
+			var lineIdx = info.IndexForName (line[i]);
+			var spinIdx = spin[i];
+			var isWild = (spinIdx == info.IndexForName("Wild"));
+			if(lineIdx != info.IndexForName("Any") && !isWild && lineIdx != spinIdx) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public override string ToString() {
 		return string.Format ("{0}/{1}/{2}/{3}/{4} : {5}c",
 			GetShortCode(line[0]),

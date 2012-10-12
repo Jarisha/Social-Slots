@@ -16,4 +16,8 @@ public class SelectGameResponse {
 			Debug.Log(e);
 		}
 	}
+	
+	public SelectGameResponse(MachineInfo mi) {
+		machine = mi;
+	}
 }

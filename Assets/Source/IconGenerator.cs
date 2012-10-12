@@ -16,7 +16,10 @@ public class IconGenerator : MonoBehaviour {
 	private static IconGenerator sm_instance = null;
 	
 	public static IconGenerator Instance() {
-		return sm_instance;
+		if(IconGenerator.sm_instance == null) {
+			IconGenerator.sm_instance = GameObject.Find ("AssetGenerator").GetComponent<IconGenerator>();
+		}
+		return IconGenerator.sm_instance;
 	}
 	
 	public void Start() {

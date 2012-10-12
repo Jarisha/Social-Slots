@@ -1,0 +1,92 @@
+{
+  "id": "simple",
+  "slots": {
+    "Any": -1,
+    "Cherry": 0,
+    "Bell": 1,
+    "Bar": 2,
+    "DoubleBar": 3,
+    "TripleBar": 4,
+    "Seven": 5,
+    "Special": 6,
+    "Orange": 7,
+    "Lemon": 8,
+    "Plum": 9,
+    "ScratchIt": 10,
+    "Wild": 11
+  },
+  "reels": [
+    {
+      "order": ["Cherry", "Bar", "Orange", "DoubleBar", "Bell", "TripleBar", "Plum", "Wild", "Seven", "Special", "Lemon", "ScratchIt"],
+      "odds": [31, 11, 15, 8, 18, 7, 13, 1, 4, 6, 11, 6]
+    },
+    {
+      "order": ["DoubleBar", "TripleBar", "Cherry", "Plum", "Seven", "Special", "Bell", "ScratchIt", "Bar", "Lemon", "Wild", "Orange"],
+      "odds": [6, 7, 37, 9, 7, 6, 21, 6, 6, 9, 1, 16]
+    },
+    {
+      "order": ["Orange", "Wild", "Bell", "Seven", "Lemon", "Bar", "Plum", "Cherry", "Special", "ScratchIt", "TripleBar", "DoubleBar"],
+      "odds": [6, 1, 16, 3, 11, 16, 21, 21, 13, 6, 11, 6]
+    },
+    {
+      "order": ["TripleBar", "Plum", "ScratchIt", "Bar", "Cherry", "DoubleBar", "Special", "Lemon", "Bell", "Orange", "Seven", "Wild"],
+      "odds": [5, 16, 16, 12, 16, 11, 11, 16, 8, 16, 3, 1]
+    },
+    {
+      "order": ["DoubleBar", "Seven", "Special", "Lemon", "Orange", "Bell", "Wild", "Bar", "ScratchIt", "TripleBar", "Cherry", "Plum"],
+      "odds": [11, 3, 11, 11, 11, 26, 1, 4, 11, 20, 11, 11]
+    }
+  ],
+  "lines": [
+    [ 0,  0,  0,  0,  0],
+    [-1, -1, -1, -1, -1],
+    [ 1,  1,  1,  1,  1],
+    [-1,  0,  0,  0, -1],
+    [ 1,  0,  0,  0,  1],
+    [ 0, -1, -1, -1,  0],
+    [ 0,  1,  1,  1,  0],
+    [-1, -1,  0,  1,  1],
+    [ 1,  1,  0, -1, -1],
+    [ 1,  0, -1,  0,  1],
+    [-1,  0,  1,  0, -1]
+  ],
+  "payouts": [
+      {"line": ["Cherry",       "Cherry",       "Any",          "Any",          "Any"], "credits": 1},
+      {"line": ["Cherry",       "Cherry",       "Cherry",       "Any",          "Any"], "credits": 5},
+      {"line": ["Cherry",       "Cherry",       "Cherry",       "Cherry",       "Any"], "credits": 25},
+      {"line": ["Cherry",       "Cherry",       "Cherry",       "Cherry",       "Cherry"], "credits": 200},
+      
+      {"line": ["Bell",         "Bell",         "Any",          "Any",          "Any"], "credits": 3},
+      {"line": ["Bell",         "Bell",         "Bell",         "Any",          "Any"], "credits": 15},
+      {"line": ["Bell",         "Bell",         "Bell",         "Bell",         "Any"], "credits": 200},
+      {"line": ["Bell",         "Bell",         "Bell",         "Bell",         "Bell"], "credits": 600},
+      
+      {"line": ["Bar",          "Bar",          "Bar",          "Any",          "Any"], "credits": 50},
+      {"line": ["Bar",          "Bar",          "Bar",          "Bar",          "Any"], "credits": 400},
+      {"line": ["Bar",          "Bar",          "Bar",          "Bar",          "Bar"], "credits": 1000},
+      
+      {"line": ["DoubleBar",    "DoubleBar",    "DoubleBar",    "Any",          "Any"], "credits": 200},
+      {"line": ["DoubleBar",    "DoubleBar",    "DoubleBar",    "DoubleBar",    "Any"], "credits": 2000},
+      {"line": ["DoubleBar",    "DoubleBar",    "DoubleBar",    "DoubleBar",    "DoubleBar"], "credits": 20000},
+      
+      {"line": ["TripleBar",    "TripleBar",    "TripleBar",    "Any",          "Any"], "credits": 300},
+      {"line": ["TripleBar",    "TripleBar",    "TripleBar",    "TripleBar",    "Any"], "credits": 3000},
+      {"line": ["TripleBar",    "TripleBar",    "TripleBar",    "TripleBar",    "TripleBar"], "credits": 30000},
+      
+      {"line": ["Orange",       "Orange",       "Orange",       "Any",          "Any"], "credits": 20},
+      {"line": ["Orange",       "Orange",       "Orange",       "Orange",       "Any"], "credits": 300},
+      {"line": ["Orange",       "Orange",       "Orange",       "Orange",       "Orange"], "credits": 1000},
+      
+      {"line": ["Plum",        	"Plum",        	"Plum",        	"Any",          "Any"], "credits": 25},
+      {"line": ["Plum",        	"Plum",        	"Plum",        	"Plum",        "Any"], "credits": 115},
+      {"line": ["Plum",        	"Plum",        	"Plum",        	"Plum",        "Plum"], "credits": 750},
+      
+      {"line": ["Lemon",        "Lemon",        "Lemon",        "Any",          "Any"], "credits": 45},
+      {"line": ["Lemon",        "Lemon",        "Lemon",        "Lemon",        "Any"], "credits": 175},
+      {"line": ["Lemon",        "Lemon",        "Lemon",        "Lemon",        "Lemon"], "credits": 1500},
+      
+      {"line": ["Seven",        "Seven",        "Seven",        "Any",          "Any"], "credits": 1000},
+      {"line": ["Seven",        "Seven",        "Seven",        "Seven",        "Any"], "credits": 10000},
+      {"line": ["Seven",        "Seven",        "Seven",        "Seven",        "Seven"], "credits": 100000}
+    ]
+}

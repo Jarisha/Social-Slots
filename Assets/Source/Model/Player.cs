@@ -19,6 +19,13 @@ public class Player {
 		m_level = (int)jo["_level"];
 	}
 	
+	public Player() {
+		m_user = "Carrie";
+		m_xp = 0;
+		m_credits = 100000;
+		m_level = 1;
+	}
+	
 	public void IncrementCredits(int val) {
 		m_credits += val;
 	}
