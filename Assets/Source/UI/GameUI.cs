@@ -1,3 +1,5 @@
+//#define DEMO_BUILD
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -108,7 +110,7 @@ public class GameUI : MonoBehaviour {
 	}
 	
 	public void UpdateLabels() {
-		creditsLabel.text = string.Format("Credits: {0}", ContentManager.Instance.Player.m_credits);
+		creditsLabel.text = string.Format("{0}c", ContentManager.Instance.Player.m_credits);
 		var lines = m_lineCounts[m_lineIdx];
 		var bet = m_betAmounts[m_betIdx];
 		statsLine.text = string.Format("Lines: {0} | Bet: {1} | Total Bet: {2} | Last Win: {3}",
@@ -164,18 +166,19 @@ public class GameUI : MonoBehaviour {
 		var spin = new Spin(m_lines[m_lineIdx], bet);
 		ContentManager.Instance.Player.IncrementCredits(-bet * m_lineCounts[m_lineIdx]);
 		UpdateLabels();
-#if false
+#if DEMO_BUILD
+		DemoSpinner.Spin(spin, (jdata) => {
+			ResetReelChecks();
+			spinData = new SpinResponse(jdata);
+		});
+#else
 		ConnectionProxy.Connection.SendMessage(spin, (jdata) => {
 			Debug.Log ("Spin done!");
 			Debug.Log (jdata["results"]);
 			spinData = new SpinResponse(jdata);
 		});
-#else
-		DemoSpinner.Spin(spin, (jdata) => {
-			ResetReelChecks();
-			spinData = new SpinResponse(jdata);
-		});
 #endif
+		ResetReelChecks ();
 	}
 	
 	void BetPressed() {

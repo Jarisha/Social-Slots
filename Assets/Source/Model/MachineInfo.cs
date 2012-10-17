@@ -9,9 +9,9 @@ public class MachineInfo {
 	public List<List<int>> m_reels;
 	public List<Payout> m_payouts;
 	public Dictionary<string, int> m_slots;
+	public List<List<int>> m_lines;
 	
 	// Only needed for demo info
-	public List<List<int>> m_lines;
 	public List<List<int>> m_vreels;
 	
 	public MachineInfo() {
@@ -62,6 +62,7 @@ public class MachineInfo {
 	public MachineInfo(JsonData data) {
 		ParseSlots(data["slots"]);
 		ParseReels((IList)data["reels"]);
+		ParseLines ((IList)data["lines"]);
 		ParsePayouts((IList)data["payouts"]);
 	}
 	
