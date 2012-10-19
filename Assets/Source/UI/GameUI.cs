@@ -1,10 +1,13 @@
-//#define DEMO_BUILD
+
 
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 public class GameUI : MonoBehaviour {
+	
+	
+	public bool IS_DEMO_BUILD = false;
 	
 	public Material m_lineMaterial;
 	
@@ -166,18 +169,18 @@ public class GameUI : MonoBehaviour {
 		var spin = new Spin(m_lines[m_lineIdx], bet);
 		ContentManager.Instance.Player.IncrementCredits(-bet * m_lineCounts[m_lineIdx]);
 		UpdateLabels();
-#if DEMO_BUILD
-		DemoSpinner.Spin(spin, (jdata) => {
-			ResetReelChecks();
-			spinData = new SpinResponse(jdata);
-		});
-#else
-		ConnectionProxy.Connection.SendMessage(spin, (jdata) => {
-			Debug.Log ("Spin done!");
-			Debug.Log (jdata["results"]);
-			spinData = new SpinResponse(jdata);
-		});
-#endif
+		if(this.IS_DEMO_BUILD) {
+			DemoSpinner.Spin(spin, (jdata) => {
+				spinData = new SpinResponse(jdata);
+			});
+		}
+		else {
+			ConnectionProxy.Connection.SendMessage(spin, (jdata) => {
+				Debug.Log ("Spin done!");
+				Debug.Log (jdata["results"]);
+				spinData = new SpinResponse(jdata);
+			});
+		}
 		ResetReelChecks ();
 	}
 	

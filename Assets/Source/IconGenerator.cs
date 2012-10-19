@@ -2,13 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class IconInfo {
-	public string name;
-	public Material material;
-	public Vector3 scale = new Vector3(90, 0, 0);
-}
-
 public class IconGenerator : MonoBehaviour {
 	public Mesh baseMesh;
 	public List<IconInfo> iconInfo;
@@ -34,6 +27,13 @@ public class IconGenerator : MonoBehaviour {
 		var mr = toReturn.AddComponent<MeshRenderer>();
 		mr.material = info.material;
 		toReturn.transform.localScale = info.scale;
+		if(info.animations.Length > 0) {
+			var ai = toReturn.AddComponent<AnimatedIcon>();
+			ai.animations = info.animations;
+			if(ai.HasAnimation("standard")) {
+				ai.FireAnimation("standard");
+			}
+		}
 		
 		return toReturn;
 	}

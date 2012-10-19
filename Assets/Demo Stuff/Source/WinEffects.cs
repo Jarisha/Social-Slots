@@ -10,7 +10,7 @@ public class EffectReel {
 public class WinEffects : MonoBehaviour {
 	
 	public EffectReel[] effects;
-	
+	public ParticleSystem coinEffect;
 	public AudioClip smallWinSound;
 	public AudioClip bigWinSound;
 	
@@ -30,6 +30,7 @@ public class WinEffects : MonoBehaviour {
 		for(var i = 0; i < lineOffsets.Count; i++) {
 			effects[i].winParticles[lineOffsets[i] + 1].Emit(100);
 		}
+		coinEffect.Emit(amount <= 50 ? amount : 50);
 		yield return null;
 	} 
 }

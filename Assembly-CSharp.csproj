@@ -18,7 +18,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_3_5_6;UNITY_3_5;UNITY_EDITOR;ENABLE_PROFILER;UNITY_ANDROID;ENABLE_GENERICS;ENABLE_TERRAIN;ENABLE_WEBCAM;ENABLE_NETWORK;ENABLE_CLOTH;ENABLE_WWW</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_3_5_6;UNITY_3_5;UNITY_EDITOR;ENABLE_PROFILER;UNITY_IOS;UNITY_IPHONE;ENABLE_GENERICS;ENABLE_TERRAIN;ENABLE_WEBCAM;ENABLE_MICROPHONE;ENABLE_NETWORK;ENABLE_CLOTH;ENABLE_WWW</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -133,6 +133,8 @@
      <Compile Include="Assets\Libs\LitJson\JsonWriter.cs" />
      <Compile Include="Assets\Libs\LitJson\Lexer.cs" />
      <Compile Include="Assets\Libs\LitJson\ParserToken.cs" />
+     <Compile Include="Assets\Source\AnimatedIcon.cs" />
+     <Compile Include="Assets\Source\FrameAnimation.cs" />
      <Compile Include="Assets\Source\IconGenerator.cs" />
      <Compile Include="Assets\Source\LineMarker.cs" />
      <Compile Include="Assets\Source\Model\ContentManager.cs" />
