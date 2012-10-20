@@ -42,14 +42,14 @@ MonoBehaviour:
   - name: spin_pressed-01
     outer:
       serializedVersion: 2
-      x: 257
-      y: 422
+      x: 1795
+      y: 1958
       width: 200
       height: 90
     inner:
       serializedVersion: 2
-      x: 257
-      y: 422
+      x: 1795
+      y: 1958
       width: 200
       height: 90
     paddingLeft: 0
@@ -59,14 +59,14 @@ MonoBehaviour:
   - name: spin-01
     outer:
       serializedVersion: 2
-      x: 257
-      y: 331
+      x: 1795
+      y: 1867
       width: 200
       height: 90
     inner:
       serializedVersion: 2
-      x: 257
-      y: 331
+      x: 1795
+      y: 1867
       width: 200
       height: 90
     paddingLeft: 0
@@ -76,14 +76,14 @@ MonoBehaviour:
   - name: bet-01
     outer:
       serializedVersion: 2
-      x: 0
-      y: 36
+      x: 1538
+      y: 1572
       width: 90
       height: 90
     inner:
       serializedVersion: 2
-      x: 0
-      y: 36
+      x: 1538
+      y: 1572
       width: 90
       height: 90
     paddingLeft: 0
@@ -93,14 +93,14 @@ MonoBehaviour:
   - name: lines_pressed-01
     outer:
       serializedVersion: 2
-      x: 129
-      y: 36
+      x: 1667
+      y: 1572
       width: 90
       height: 90
     inner:
       serializedVersion: 2
-      x: 129
-      y: 36
+      x: 1667
+      y: 1572
       width: 90
       height: 90
     paddingLeft: 0
@@ -110,14 +110,14 @@ MonoBehaviour:
   - name: lines-01
     outer:
       serializedVersion: 2
-      x: 258
-      y: 165
+      x: 1796
+      y: 1701
       width: 90
       height: 90
     inner:
       serializedVersion: 2
-      x: 258
-      y: 165
+      x: 1796
+      y: 1701
       width: 90
       height: 90
     paddingLeft: 0
@@ -127,14 +127,14 @@ MonoBehaviour:
   - name: bet_pressed-01
     outer:
       serializedVersion: 2
-      x: 349
-      y: 165
+      x: 1887
+      y: 1701
       width: 90
       height: 90
     inner:
       serializedVersion: 2
-      x: 349
-      y: 165
+      x: 1887
+      y: 1701
       width: 90
       height: 90
     paddingLeft: 0
@@ -144,14 +144,14 @@ MonoBehaviour:
   - name: button_numbers
     outer:
       serializedVersion: 2
-      x: 0
-      y: 256
+      x: 1538
+      y: 1792
       width: 256
       height: 256
     inner:
       serializedVersion: 2
-      x: 0
-      y: 256
+      x: 1538
+      y: 1792
       width: 256
       height: 256
     paddingLeft: 0
@@ -161,14 +161,14 @@ MonoBehaviour:
   - name: bar_fill-01
     outer:
       serializedVersion: 2
-      x: 258
-      y: 64
+      x: 1796
+      y: 1600
       width: 40
       height: 100
     inner:
       serializedVersion: 2
-      x: 259
-      y: 65
+      x: 1797
+      y: 1601
       width: 38
       height: 98
     paddingLeft: 0
@@ -178,14 +178,14 @@ MonoBehaviour:
   - name: credits_field-01
     outer:
       serializedVersion: 2
-      x: 257
-      y: 266
+      x: 1795
+      y: 1802
       width: 64
       height: 64
     inner:
       serializedVersion: 2
-      x: 281
-      y: 294
+      x: 1819
+      y: 1830
       width: 16
       height: 8
     paddingLeft: 0
@@ -195,14 +195,14 @@ MonoBehaviour:
   - name: side_fill-01
     outer:
       serializedVersion: 2
-      x: 458
-      y: 472
+      x: 1996
+      y: 2008
       width: 28
       height: 40
     inner:
       serializedVersion: 2
-      x: 462
-      y: 476
+      x: 2000
+      y: 2012
       width: 20
       height: 32
     paddingLeft: 0
@@ -212,14 +212,14 @@ MonoBehaviour:
   - name: shade_bottom-01
     outer:
       serializedVersion: 2
-      x: 0
-      y: 127
+      x: 1538
+      y: 1663
       width: 128
       height: 128
     inner:
       serializedVersion: 2
-      x: 0
-      y: 127
+      x: 1538
+      y: 1663
       width: 128
       height: 128
     paddingLeft: 0
@@ -229,16 +229,67 @@ MonoBehaviour:
   - name: shade_top-01
     outer:
       serializedVersion: 2
-      x: 129
-      y: 127
+      x: 1667
+      y: 1663
       width: 128
       height: 128
     inner:
       serializedVersion: 2
-      x: 129
-      y: 127
+      x: 1667
+      y: 1663
       width: 128
       height: 128
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: top_bg-01
+    outer:
+      serializedVersion: 2
+      x: 0
+      y: 1536
+      width: 1024
+      height: 512
+    inner:
+      serializedVersion: 2
+      x: 0
+      y: 1536
+      width: 1024
+      height: 512
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: clouds-01
+    outer:
+      serializedVersion: 2
+      x: 1025
+      y: 1792
+      width: 512
+      height: 256
+    inner:
+      serializedVersion: 2
+      x: 1025
+      y: 1792
+      width: 512
+      height: 256
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: tmp_logo
+    outer:
+      serializedVersion: 2
+      x: 1025
+      y: 1559
+      width: 486
+      height: 232
+    inner:
+      serializedVersion: 2
+      x: 1025
+      y: 1559
+      width: 486
+      height: 232
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0

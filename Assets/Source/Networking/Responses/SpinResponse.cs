@@ -25,24 +25,24 @@ public class SpinResponse {
 	public SpinResponse(JsonData data) {
 		var results = (JsonData)data["results"];
 		
-		Debug.Log ("Parsing reel data");
+		//Debug.Log ("Parsing reel data");
 		var reelData = (IList)results["reels"];
-		Debug.Log ("Reel data: " + reelData);
+		//Debug.Log ("Reel data: " + reelData);
 		reels = new int[5];
 		for(int i = 0; i < 5; i++) {
 			var jd = (JsonData)reelData[i];
-			Debug.Log (jd.GetJsonType());
+			//Debug.Log (jd.GetJsonType());
 			var id = (int)jd;
-			Debug.Log ("Reel " + i + ": " + id);
+			//Debug.Log ("Reel " + i + ": " + id);
 			reels[i] = id;
 		}
 		
-		Debug.Log ("Parsing results");
+		//Debug.Log ("Parsing results");
 		var spinResults = (JsonData)results["results"];
 		totalCredits = (int)spinResults["total_credits"];
 		xp = (int)spinResults["xp"];
 		
-		Debug.Log ("Parsing line payouts");
+		//Debug.Log ("Parsing line payouts");
 		var lineInfo = (IList)spinResults["paylines"];
 		lines = new List<LinePayout>();
 		for(var i = 0; i < lineInfo.Count; i++) {

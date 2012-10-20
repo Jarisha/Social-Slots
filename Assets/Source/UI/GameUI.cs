@@ -25,7 +25,7 @@ public class GameUI : MonoBehaviour {
 	
 	public AudioClip spinningSound;
 	
-	bool[] m_reelDone = {true, true, true, true, true};
+	public bool[] m_reelDone = {true, true, true, true, true};
 	int m_lastWin = 0;
 	
 	int[] m_betAmounts = {
@@ -72,6 +72,7 @@ public class GameUI : MonoBehaviour {
 				SetTargets();
 			}
 			if(AllReelsFinished()) {
+				Debug.Log ("Handle Spin Results!");
 				HandleSpinResults();
 			}
 		}
@@ -169,8 +170,11 @@ public class GameUI : MonoBehaviour {
 		var spin = new Spin(m_lines[m_lineIdx], bet);
 		ContentManager.Instance.Player.IncrementCredits(-bet * m_lineCounts[m_lineIdx]);
 		UpdateLabels();
+		ResetReelChecks ();
 		if(this.IS_DEMO_BUILD) {
 			DemoSpinner.Spin(spin, (jdata) => {
+				Debug.Log ("Spin done!");
+				Debug.Log (jdata["results"]);
 				spinData = new SpinResponse(jdata);
 			});
 		}
@@ -181,7 +185,6 @@ public class GameUI : MonoBehaviour {
 				spinData = new SpinResponse(jdata);
 			});
 		}
-		ResetReelChecks ();
 	}
 	
 	void BetPressed() {
@@ -219,10 +222,17 @@ public class GameUI : MonoBehaviour {
 	
 	public void ResetWithResponse(SelectGameResponse resp) {
 		info = resp.machine;
+		ResetReelOwner();
 		CreateReelIcons();
 		UpdateLineColors();
 		UpdateLines ();
 		UpdatePayoutInfo();
+	}
+	
+	void ResetReelOwner() {
+		for(var i = 0; i < reels.Length; i++) {
+			reels[i].owner = this;
+		}
 	}
 	
 	void UpdatePayoutInfo() {
