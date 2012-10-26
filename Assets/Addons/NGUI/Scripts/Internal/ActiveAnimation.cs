@@ -162,7 +162,7 @@ public class ActiveAnimation : IgnoreTimeScale
 	static public ActiveAnimation Play (Animation anim, string clipName, Direction playDirection,
 		EnableCondition enableBeforePlay, DisableCondition disableCondition)
 	{
-		if (!anim.gameObject.active)
+		if (!anim.gameObject.activeSelf)
 		{
 			// If the object is disabled, don't do anything
 			if (enableBeforePlay != EnableCondition.EnableThenPlay) return null;

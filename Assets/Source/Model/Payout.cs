@@ -20,10 +20,10 @@ public class Payout {
 	
 	public bool DoesMatch(int[] spin, MachineInfo info) {
 		for(var i = 0; i < 5; i++) {
-			var lineIdx = info.IndexForName (line[i]);
 			var spinIdx = spin[i];
-			var isWild = (spinIdx == info.IndexForName("Wild"));
-			if(lineIdx != info.IndexForName("Any") && !isWild && lineIdx != spinIdx) {
+			var lineIdx = info.IdForName (line[i]);
+			var isWild = (spinIdx == info.IdForName("Wild"));
+			if(lineIdx != info.IdForName("Any") && !isWild && lineIdx != spinIdx) {
 				return false;
 			}
 		}

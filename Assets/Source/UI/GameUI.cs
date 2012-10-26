@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class GameUI : MonoBehaviour {
 	
 	
-	public bool IS_DEMO_BUILD = false;
+	public bool USE_BAKED_LOGIC = false;
 	
 	public Material m_lineMaterial;
 	
@@ -26,7 +26,6 @@ public class GameUI : MonoBehaviour {
 	public AudioClip spinningSound;
 	
 	public bool[] m_reelDone = {true, true, true, true, true};
-	int m_lastWin = 0;
 	
 	int[] m_betAmounts = {
 		1,
@@ -105,9 +104,6 @@ public class GameUI : MonoBehaviour {
 		spinning = false;
 		var winAmount = spinData.totalCredits;
 		ContentManager.Instance.Player.IncrementCredits(winAmount);
-		if(winAmount > 0) {
-			m_lastWin = winAmount;
-		}
 		StartCoroutine(ShowSpinResults());
 		ResetReelChecks();
 		UpdateLabels();
@@ -115,10 +111,6 @@ public class GameUI : MonoBehaviour {
 	
 	public void UpdateLabels() {
 		creditsLabel.text = string.Format("{0}c", ContentManager.Instance.Player.m_credits);
-		var lines = m_lineCounts[m_lineIdx];
-		var bet = m_betAmounts[m_betIdx];
-		statsLine.text = string.Format("Lines: {0} | Bet: {1} | Total Bet: {2} | Last Win: {3}",
-			lines, bet, lines * bet, m_lastWin);
 		UpdateButtonInfo();
 	}
 	
@@ -171,7 +163,7 @@ public class GameUI : MonoBehaviour {
 		ContentManager.Instance.Player.IncrementCredits(-bet * m_lineCounts[m_lineIdx]);
 		UpdateLabels();
 		ResetReelChecks ();
-		if(this.IS_DEMO_BUILD) {
+		if(this.USE_BAKED_LOGIC) {
 			DemoSpinner.Spin(spin, (jdata) => {
 				Debug.Log ("Spin done!");
 				Debug.Log (jdata["results"]);
@@ -246,7 +238,7 @@ public class GameUI : MonoBehaviour {
 			}
 			toDisplay += "\n";
 		}
-		payoutsLabel.text = toDisplay;
+		//payoutsLabel.text = toDisplay;
 	}
 	
 	void UpdateLineColors() {
@@ -267,7 +259,7 @@ public class GameUI : MonoBehaviour {
 			var newIcons = new List<GameObject>();
 			for(var j = 0; j < reelInfo.Count; j++) {
 				var slotIdx = reelInfo[j];
-				var slotName = info.NameForIndex(slotIdx);
+				var slotName = info.NameForId(slotIdx);
 				var icon = iconMaker.CreateIcon(slotName);
 				reel.stops.Add (slotIdx);
 				newIcons.Add (icon);

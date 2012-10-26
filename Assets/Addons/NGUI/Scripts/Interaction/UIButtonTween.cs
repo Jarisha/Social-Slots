@@ -188,7 +188,7 @@ public class UIButtonTween : MonoBehaviour
 	{
 		GameObject go = (tweenTarget == null) ? gameObject : tweenTarget;
 
-		if (!go.active)
+		if (!go.activeSelf)
 		{
 			// If the object is disabled, don't do anything
 			if (ifDisabledOnPlay != EnableCondition.EnableThenPlay) return;
@@ -219,7 +219,7 @@ public class UIButtonTween : MonoBehaviour
 				if (tw.tweenGroup == tweenGroup)
 				{
 					// Ensure that the game objects are enabled
-					if (!activated && !go.active)
+					if (!activated && !go.activeSelf)
 					{
 						activated = true;
 						NGUITools.SetActive(go, true);

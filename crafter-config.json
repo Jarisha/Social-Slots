@@ -1,0 +1,24 @@
+[
+  {
+    "type": "ios", 
+    "method": "BuildScript.BuildIphoneCasino", 
+    "build_suffix": "-casino", 
+    "xcode_dir": "xcode_casino"
+  },
+  {
+    "type": "ios", 
+    "method": "BuildScript.BuildIphoneSocial", 
+    "build_suffix": "-social", 
+    "xcode_dir": "xcode_social"
+  },
+  {
+    "type": "android", 
+    "method": "BuildScript.BuildAndroidCasino", 
+    "build_suffix": "-casino"
+  },
+  {
+    "type": "android", 
+    "method": "BuildScript.BuildAndroidSocial", 
+    "build_suffix": "-social"
+  }
+]

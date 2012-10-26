@@ -150,7 +150,7 @@ public abstract class UIWidget : MonoBehaviour
 		mChanged = true;
 
 		// If we're in the editor, update the panel right away so its geometry gets updated.
-		if (mPanel != null && enabled && gameObject.active && !Application.isPlaying && material != null)
+		if (mPanel != null && enabled && gameObject.activeSelf && !Application.isPlaying && material != null)
 		{
 			mPanel.AddWidget(this);
 			CheckLayer();
@@ -167,7 +167,7 @@ public abstract class UIWidget : MonoBehaviour
 
 	void CreatePanel ()
 	{
-		if (mPanel == null && enabled && gameObject.active && material != null)
+		if (mPanel == null && enabled && gameObject.activeSelf && material != null)
 		{
 			mPanel = UIPanel.Find(cachedTransform);
 

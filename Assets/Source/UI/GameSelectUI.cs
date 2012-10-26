@@ -16,11 +16,11 @@ public class GameSelectUI : MonoBehaviour {
 	}
 	
 	public void Show() {
-		uiRoot.SetActiveRecursively(true);
+		uiRoot.SetActive(true);
 	}
 	
 	public void Hide() {
-		uiRoot.SetActiveRecursively(false);
+		uiRoot.SetActive(false);
 	}
 	
 	void SimplePressed() {

@@ -42,8 +42,7 @@ public class DemoSpinner {
 	static int[] SpinReels() {
 		var toReturn = new int[5];
 		for(var i = 0; i < 5; i++) {
-			var vslotIdx = UnityEngine.Random.Range (0, sm_info.GetVslotCount(i));
-			toReturn[i] = sm_info.MapVReelIndex(i, vslotIdx);
+			toReturn[i] = UnityEngine.Random.Range (0, sm_info.GetSlotCount(i));
 		}
 		return toReturn;
 	}

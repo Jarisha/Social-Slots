@@ -55,12 +55,12 @@ public class LoginUI : MonoBehaviour {
 	}
 	
 	public void Show() {
-		uiRoot.SetActiveRecursively(true);
+		uiRoot.SetActive(true);
 		SetScreenInfo();
 	}
 	
 	public void Hide() {
-		uiRoot.SetActiveRecursively(false);
+		uiRoot.SetActive(false);
 	}
 	
 	void LoginPressed() {

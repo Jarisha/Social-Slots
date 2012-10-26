@@ -54,9 +54,9 @@ public class Payline : MonoBehaviour {
 	
 	public void SetVisible(bool isVisible) {
 		m_isVisible = isVisible;
-		left.active = isVisible;
-		right.active = isVisible;
-		line.active = isVisible;
+		left.SetActive (isVisible);
+		right.SetActive (isVisible);
+		line.SetActive (isVisible);
 		SetAlpha (isVisible ? 1.0f : 0.0f);
 		m_destAlpha = isVisible ? 1.0f : 0.0f;
 	}

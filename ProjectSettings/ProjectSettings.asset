@@ -6,13 +6,12 @@ PlayerSettings:
   serializedVersion: 2
   AndroidProfiler: 0
   defaultScreenOrientation: 4
-  targetDevice: 1
-  targetPlatform: 2
+  targetDevice: 2
+  targetGlesGraphics: 1
   targetResolution: 0
   accelerometerFrequency: 0
   companyName: Slimstown
-  productName: socialslots
-  AndroidLicensePublicKey: 
+  productName: slots
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
   defaultScreenWidthWeb: 480
@@ -20,6 +19,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_ActiveColorSpace: 0
   m_MTRendering: 1
+  m_UseDX11: 0
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
   displayResolutionDialog: 1
@@ -35,12 +35,15 @@ PlayerSettings:
   captureSingleScreen: 0
   Override IPod Music: 0
   usePlayerLog: 1
+  stripPhysics: 0
   useMacAppStoreValidation: 0
   xboxSkinOnGPU: 1
   xboxEnableAvatar: 0
   xboxEnableKinect: 0
   xboxEnableKinectAutoTracking: 0
-  xboxEnableSpeech: 0
+  xboxEnableFitness: 0
+  macFullscreenMode: 2
+  xboxSpeechDB: 0
   wiiHio2Usage: -1
   wiiLoadingScreenRectPlacement: 0
   wiiLoadingScreenBackground: {r: 1, g: 1, b: 1, a: 1}
@@ -58,7 +61,6 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  debugUnloadMode: 0
   iPhoneBundleIdentifier: com.slimstown.socialslots
   iPhoneBundleVersion: 0.7.2
   AndroidBundleVersionCode: 1
@@ -71,27 +73,25 @@ PlayerSettings:
   ForceInternetPermission: 0
   ForceSDCardPermission: 0
   CreateWallpaper: 0
+  APKExpansionFiles: 0
   StripUnusedMeshComponents: 0
   iPhoneSdkVersion: 988
-  iPhoneTargetOSVersion: 7
+  iPhoneTargetOSVersion: 16
   uIPrerenderedIcon: 0
   uIRequiresPersistentWiFi: 0
   uIStatusBarHidden: 1
   uIExitOnSuspend: 0
   uIStatusBarStyle: 0
-  iPhoneSplashScreen: {fileID: 2800000, guid: 34d111037ebeb48d9a9908483482d096, type: 1}
+  iPhoneSplashScreen: {fileID: 2800000, guid: 34d111037ebeb48d9a9908483482d096, type: 3}
   iPhoneHighResSplashScreen: {fileID: 2800000, guid: 34d111037ebeb48d9a9908483482d096,
-    type: 1}
-  iPhoneTallHighResSplashScreen: {fileID: 2800000, guid: 3b118f08b35f1440d88cb86773b815f4,
-    type: 1}
+    type: 3}
   iPadPortraitSplashScreen: {fileID: 2800000, guid: bdd49551229f3419bb7e78ab269fcf61,
-    type: 1}
+    type: 3}
   iPadHighResPortraitSplashScreen: {fileID: 0}
   iPadLandscapeSplashScreen: {fileID: 2800000, guid: 4c3c20e9e5d444975880bb2dbd62f145,
-    type: 1}
+    type: 3}
   iPadHighResLandscapeSplashScreen: {fileID: 0}
   AndroidTargetDevice: 0
-  AndroidTargetGraphics: 1
   AndroidSplashScreenScale: 2
   AndroidKeystoreName: 
   AndroidKeyaliasName: 
@@ -115,7 +115,7 @@ PlayerSettings:
   wiiControllerCount: 1
   wiiFloatingPointExceptions: 0
   wiiScreenCrashDumps: 1
-  wiiMemoryLabelCount: 147
+  wiiMemoryLabelCount: 153
   wiiMemorySetup: 0000000000000000000000000000000000000000
   XboxTitleId: 
   XboxImageXexPath: 
@@ -123,7 +123,7 @@ PlayerSettings:
   XboxGenerateSpa: 0
   XboxDeployKinectResources: 0
   XboxSplashScreen: {fileID: 0}
-  xboxSpeechDB: 0
+  xboxEnableSpeech: 0
   ps3TitleConfigPath: 
   ps3DLCConfigPath: 
   ps3ThumbnailPath: 
@@ -131,13 +131,13 @@ PlayerSettings:
   ps3SoundPath: 
   ps3TrophyCommId: 
   ps3TrophyPackagePath: 
-  ps3ReservedMemorySizeMB: 16
   ps3BootCheckMaxSaveGameSizeKB: 128
   ps3TrophyCommSig: 
   ps3SaveGameSlots: 1
   ps3TrialMode: 0
   flashStrippingLevel: 2
+  scriptingDefineSymbols: {}
   firstStreamedLevelWithResources: 0
   unityRebuildLibraryVersion: 9
-  unityForwardCompatibleVersion: 36
+  unityForwardCompatibleVersion: 37
   unityStandardAssetsVersion: 0

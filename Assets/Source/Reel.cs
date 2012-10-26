@@ -74,12 +74,7 @@ public class Reel : MonoBehaviour {
 	}
 	
 	int IndexOfTarget() {
-		for(var i = 0; i < stops.Count; i++) {
-			if(stops[i] == target) {
-				return i;
-			}
-		}
-		return -1;
+		return target;
 	}
 	
 	int GetNumIcons() {
@@ -133,7 +128,7 @@ public class Reel : MonoBehaviour {
 		}
 		
 		var stopPos = icons[(int)target].transform.localPosition.y;
-		if(Mathf.Abs(100.0f - stopPos) < 20.0f) {
+		if(Mathf.Abs(100.0f - stopPos) < minVelocity * 1.5f) {
 			state = SpinState.Stopped;
 		}
 	}

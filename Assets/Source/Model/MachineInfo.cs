@@ -11,44 +11,19 @@ public class MachineInfo {
 	public Dictionary<string, int> m_slots;
 	public List<List<int>> m_lines;
 	
-	// Only needed for demo info
-	public List<List<int>> m_vreels;
-	
 	public MachineInfo() {
 		m_reels = new List<List<int>>();
 		m_payouts = new List<Payout>();
 		m_slots = new Dictionary<string, int>();
 		m_lines = new List<List<int>>();
-		m_vreels = new List<List<int>>();
 	}
 	
 	public void AddReel(List<int> toAdd) {
 		m_reels.Add (toAdd);
 	}
 	
-	public void AddVReel(List<int> toAdd) {
-		m_vreels.Add (toAdd);
-	}
-	
-	public int GetVslotCount(int reelIdx) {
-		var vreel = m_vreels[reelIdx];
-		var total = 0;
-		foreach(var toAdd in vreel) {
-			total += toAdd;
-		}
-		return total;
-	}
-	
-	public int MapVReelIndex(int reel, int vreelIdx) {
-		var total = 0;
-		var vreel = m_vreels[reel];
-		for(var i = 0; i < vreel.Count; i++) {
-			total += vreel[i];
-			if(vreelIdx < total) {
-				return i;
-			}
-		}
-		return -1;
+	public int GetSlotCount(int reelIdx) {
+		return m_reels[reelIdx].Count;
 	}
 	
 	public void AddSlot(string name, int idx) {
@@ -62,7 +37,7 @@ public class MachineInfo {
 	public MachineInfo(JsonData data) {
 		ParseSlots(data["slots"]);
 		ParseReels((IList)data["reels"]);
-		ParseLines ((IList)data["lines"]);
+		ParseLines((IList)data["lines"]);
 		ParsePayouts((IList)data["payouts"]);
 	}
 	
@@ -98,7 +73,7 @@ public class MachineInfo {
 			for(var j = 0; j < toProcess.Count; j++) {
 				var jd = (JsonData)toProcess[j];
 				var name = (string)jd;
-				toAdd.Add (IndexForName (name));
+				toAdd.Add (IdForName(name));
 			}
 			m_reels.Add (toAdd);
 		}
@@ -114,7 +89,7 @@ public class MachineInfo {
 		}
 	}
 	
-	public int IndexForName(string key) {
+	public int IdForName(string key) {
 		if(m_slots.ContainsKey (key)) {
 			return m_slots[key];
 		}
@@ -123,9 +98,9 @@ public class MachineInfo {
 		}
 	}
 	
-	public string NameForIndex(int idx) {
+	public string NameForId(int id) {
 		foreach(var key in m_slots.Keys) {
-			if(m_slots[key] == idx) {
+			if(m_slots[key] == id) {
 				return key;
 			}
 		}
@@ -134,6 +109,13 @@ public class MachineInfo {
 	
 	public int CheckLineWithSpin(int[] spin, int lineIdx) {
 		int[] adjSpin = GetAdjustedSpin(spin, lineIdx);
+	/*	Debug.Log (string.Format ("Adusted spin: {0}:{1}:{2}, {3}:{4}:{5}, {6}:{7}:{8}, {9}:{10}:{11}, {12}:{13}:{14}", 
+			spin[0], m_lines[lineIdx][0], adjSpin[0],
+			spin[1], m_lines[lineIdx][1], adjSpin[1],
+			spin[2], m_lines[lineIdx][2], adjSpin[2],
+			spin[3], m_lines[lineIdx][3], adjSpin[3],
+			spin[4], m_lines[lineIdx][4], adjSpin[4]
+			));*/
 		var payout = GetTopPayout(adjSpin);
 		if(payout == null) {
 			return 0;
@@ -147,7 +129,7 @@ public class MachineInfo {
 		var toReturn = new int[5];
 		var offsets = m_lines[lineIdx];
 		for(var i = 0; i < 5; i++) {
-			var baseIdx = FindReelIdxForVal(i, baseSpin[i]);
+			var baseIdx = baseSpin[i];
 			var idx = baseIdx + offsets[i];
 			if(idx < 0) {
 				idx += m_reels[i].Count;

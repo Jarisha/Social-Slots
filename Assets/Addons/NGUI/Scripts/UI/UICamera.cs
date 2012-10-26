@@ -334,7 +334,7 @@ public class UICamera : MonoBehaviour
 			{
 				// Invalid or inactive entry -- keep going
 				UICamera cam = mList[i];
-				if (cam == null || !cam.enabled || !cam.gameObject.active) continue;
+				if (cam == null || !cam.enabled || !cam.gameObject.activeSelf) continue;
 				return cam;
 			}
 			return null;
@@ -363,7 +363,7 @@ public class UICamera : MonoBehaviour
 			UICamera cam = mList[i];
 			
 			// Skip inactive scripts
-			if (!cam.enabled || !cam.gameObject.active) continue;
+			if (!cam.enabled || !cam.gameObject.activeSelf) continue;
 
 			// Convert to view space
 			currentCamera = cam.cachedCamera;

@@ -394,7 +394,7 @@ public class UIFont : MonoBehaviour
 		{
 			UILabel lbl = labels[i];
 
-			if (lbl.enabled && lbl.gameObject.active && CheckIfRelated(this, lbl.font))
+			if (lbl.enabled && lbl.gameObject.activeSelf && CheckIfRelated(this, lbl.font))
 			{
 				UIFont fnt = lbl.font;
 				lbl.font = null;

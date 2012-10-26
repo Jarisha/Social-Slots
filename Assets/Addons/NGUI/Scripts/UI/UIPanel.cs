@@ -144,9 +144,9 @@ public class UIPanel : MonoBehaviour
 				{
 					UIDrawCall dc = list[i];
 					GameObject go = dc.gameObject;
-					go.active = false;
+					go.SetActive (false);
 					go.hideFlags = flags;
-					go.active = true;
+					go.SetActive(true);
 				}
 			}
 		}
@@ -282,7 +282,7 @@ public class UIPanel : MonoBehaviour
 
 	public bool IsVisible (UIWidget w)
 	{
-		if (!w.enabled || !w.gameObject.active || w.color.a < 0.001f) return false;
+		if (!w.enabled || !w.gameObject.activeSelf || w.color.a < 0.001f) return false;
 
 		// No clipping? No point in checking.
 		if (mClipping == UIDrawCall.Clipping.None) return true;

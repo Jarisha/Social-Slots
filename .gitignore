@@ -6,5 +6,6 @@ Temp
 *.ipa
 *.pidb
 web
-xcode
+xcode_casino/build
+xcode_slots/build
 build.log

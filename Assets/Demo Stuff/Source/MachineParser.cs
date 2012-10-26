@@ -25,17 +25,12 @@ public class MachineParser {
 		for(var i = 0; i < fullReels.Count; i++) {
 			JsonData fullReelObj = (JsonData)fullReels[i];
 			IList layout = (IList)fullReelObj["order"];
-			IList odds = (IList)fullReelObj["odds"];
 			List<int> reel = new List<int>();
-			List<int> vreel = new List<int>();
 			for(var j = 0; j < layout.Count; j++) {
 				var reelJD = (JsonData)layout[j];
-				var vreelJD = (JsonData)odds[j];
-				reel.Add (machineInfo.IndexForName((string)reelJD));
-				vreel.Add ((int)vreelJD);
+				reel.Add (machineInfo.IdForName((string)reelJD));
 			}
 			machineInfo.AddReel(reel);
-			machineInfo.AddVReel(vreel);
 		}
 	}
 }
