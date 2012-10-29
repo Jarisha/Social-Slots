@@ -17,9 +17,19 @@ public class InitScript : MonoBehaviour {
 	public GameObject loginScreen;
 	
 	public bool IS_CASINO_BUILD;
-
+	
+	ScreenOrientation orientation;
+	
 	// Use this for initialization
 	void Start () {
+		orientation = Screen.orientation;
+		Debug.Log ("Initial orientation: " + orientation);
+		if(IS_CASINO_BUILD && IsPortraitOrientation()) {
+			Screen.orientation = ScreenOrientation.LandscapeLeft;
+		}
+		else if(!IS_CASINO_BUILD && !IsPortraitOrientation()) {
+			Screen.orientation = ScreenOrientation.Portrait;
+		}
 		SetBuildObjectsActive();
 		GameUI activeGame = IS_CASINO_BUILD ? casinoGameDemo : socialGameDemo;
 		loginScreen.SetActive(!activeGame.USE_BAKED_LOGIC);
@@ -37,12 +47,25 @@ public class InitScript : MonoBehaviour {
 		}
 	}
 	
+	bool IsPortraitOrientation() {
+		return Screen.orientation == ScreenOrientation.Portrait || 
+			Screen.orientation == ScreenOrientation.PortraitUpsideDown;
+	}
+	
 	void SetBuildObjectsActive() {
 		foreach(var go in casinoGameObjects) {
 			go.SetActive(IS_CASINO_BUILD);
 		}
 		foreach(var go in socialGameObjects) {
 			go.SetActive(!IS_CASINO_BUILD);
+		}
+	}
+	
+	void Update() {
+		if(Screen.orientation != ScreenOrientation.Unknown && Screen.orientation != orientation) {
+			orientation = Screen.orientation;
+			Debug.Log ("Orientation is now: " + orientation);
+			resSwitcher.ConfigureForResolution(IS_CASINO_BUILD);
 		}
 	}
 }

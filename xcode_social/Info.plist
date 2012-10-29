@@ -19,9 +19,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>CFBundleVersion</key>
-	<string>0.7.2</string>
+	<string>0.8</string>
 	<key>CFBundleDisplayName</key>
-	<string>socialslots</string>
+	<string>Social Slots</string>
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>Icon.png</string>
@@ -31,8 +31,8 @@
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UIInterfaceOrientation</key>
 	<string></string>

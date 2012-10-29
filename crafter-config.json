@@ -3,13 +3,17 @@
     "type": "ios", 
     "method": "BuildScript.BuildIphoneCasino", 
     "build_suffix": "-casino", 
-    "xcode_dir": "xcode_casino"
+    "xcode_dir": "xcode_casino",
+    "app_file": "slots.app",
+    "code_sign_identity": "iPhone Distribution: Slimstown Studios, Inc."
   },
   {
     "type": "ios", 
     "method": "BuildScript.BuildIphoneSocial", 
     "build_suffix": "-social", 
-    "xcode_dir": "xcode_social"
+    "xcode_dir": "xcode_social",
+    "app_file": "socialslots.app",
+    "code_sign_identity": "iPhone Distribution: Slimstown Studios, Inc."
   },
   {
     "type": "android", 
