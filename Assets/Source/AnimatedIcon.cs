@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class AnimatedIcon : MonoBehaviour {
+public class AnimatedIcon : Icon {
 	
 	public FrameAnimation[] animations;
 	public FrameAnimation activeAnim;

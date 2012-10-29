@@ -290,6 +290,11 @@
     [ 1,  0, -1,  0,  1],
     [-1,  0,  1,  0, -1]
   ],
+  "gem_odds": {
+  	"Red": 0.1,
+  	"Green": 0.1,
+  	"Blue": 0.1
+  },
   "payouts": [
       {"line": ["Cherry",       "Cherry",       "Any",          "Any",          "Any"], "credits": 1},
       {"line": ["Cherry",       "Cherry",       "Cherry",       "Any",          "Any"], "credits": 5},

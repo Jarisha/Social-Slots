@@ -31,6 +31,10 @@ public enum ScreenResolution {
 [System.Serializable]
 public class ScreenConfig {
 	public ScreenResolution resolution;
+	
+	public float width;
+	public float height;
+	
 	public int mainCameraSize;
 	public Vector3 mainCameraLocation;
 	
@@ -59,4 +63,8 @@ public class ScreenConfig {
 	
 	public float leftBarHeight;
 	public float rightBarHeight;
+	
+	public float GetAspectRatio() {
+		return width / height;
+	}
 }

@@ -11,11 +11,15 @@ public class MachineInfo {
 	public Dictionary<string, int> m_slots;
 	public List<List<int>> m_lines;
 	
+	// Only used for demo spinner
+	public Dictionary<GemType, float> m_gemOdds;
+	
 	public MachineInfo() {
 		m_reels = new List<List<int>>();
 		m_payouts = new List<Payout>();
 		m_slots = new Dictionary<string, int>();
 		m_lines = new List<List<int>>();
+		m_gemOdds = new Dictionary<GemType, float>();
 	}
 	
 	public void AddReel(List<int> toAdd) {
@@ -86,6 +90,15 @@ public class MachineInfo {
 		foreach(string key in dict.Keys) {
 			//Debug.Log (key);
 			m_slots[key] = (int)jd[key];
+		}
+	}
+	
+	public void ParseGemOdds(JsonData jd) {
+		m_gemOdds = new Dictionary<GemType, float>();
+		IDictionary dict = (IDictionary)jd;
+		foreach(string key in dict.Keys) {
+			var gt = (GemType)System.Enum.Parse(typeof(GemType), key);
+			m_gemOdds[gt] = (float)(double)jd[key];
 		}
 	}
 	

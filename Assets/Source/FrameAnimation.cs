@@ -1,6 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
+public enum GemType {
+	Red,
+	Green,
+	Blue
+}
+
 [System.Serializable]
 public class Frame {
 	public Rect uvs;
@@ -28,6 +34,14 @@ public class FrameAnimation {
 public class IconInfo {
 	public string name;
 	public FrameAnimation[] animations;
+	public Material material;
+	public Vector3 scale;
+}
+
+[System.Serializable]
+public class GemInfo {
+	public string name;
+	public GemType type;
 	public Material material;
 	public Vector3 scale;
 }

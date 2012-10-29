@@ -30,19 +30,54 @@ public class ResolutionHandler : MonoBehaviour {
 	ScreenResolution GetCorrectDefault() {
 		var width = Screen.width;
 		var height = Screen.height;
+		if((width > height && Screen.autorotateToPortrait) || (width < height && Screen.autorotateToLandscapeLeft)) {
+			Debug.Log ("Swapping aspect");
+			var tmp = width;
+			width = height;
+			height = tmp;
+		}
+		var aspect = width / (float)height;
+		Debug.Log ("Screen aspect: " + aspect);
+		
+		ScreenResolution toReturn;
+		float diff = float.MaxValue;
 		
 		if(width > height) {
-			return ScreenResolution.RES_DEFAULT_LANDSCAPE;
+			toReturn = ScreenResolution.RES_DEFAULT_LANDSCAPE;
 		}
 		else {
-			return ScreenResolution.RES_DEFAULT_PORTRAIT;
+			toReturn = ScreenResolution.RES_DEFAULT_PORTRAIT;
 		}
+		var config = GetConfigForResolution(toReturn);
+		Debug.Log ("Default aspect: " + config.GetAspectRatio());
+		diff = Mathf.Abs(config.GetAspectRatio() - aspect);
+		Debug.Log ("Base diff: " + diff);
+		
+		foreach(var toCheck in configs) {
+			var newDiff = Mathf.Abs (toCheck.GetAspectRatio() - aspect);
+			if(newDiff < diff) {
+				Debug.Log ("Smaller diff: " + newDiff + " for resolution: " + toCheck.resolution);
+				toReturn = toCheck.resolution;
+				diff = newDiff;
+			}
+		}
+		
+		return toReturn;
 	}
 	
 	public ScreenResolution DetermineResolution() {
 		var width = Screen.width;
 		var height = Screen.height;
+		
+		if((width > height && Screen.autorotateToPortrait) || (width < height && Screen.autorotateToLandscapeLeft)) {
+			Debug.Log ("Swapping aspect");
+			var tmp = width;
+			width = height;
+			height = tmp;
+		}
+		
 		var resString = string.Format ("RES_{0}_BY_{1}", width, height);
+		Debug.Log ("Looking for: " + resString);
 		
 		var toReturn = GetCorrectDefault();
 		
@@ -52,13 +87,13 @@ public class ResolutionHandler : MonoBehaviour {
 		catch(Exception e) {
 			e.ToString();
 		}
-		Debug.Log ("USING SCREEN RES: " + toReturn);
 		return toReturn;
 	}
 	
 	public void ConfigureForResolution(bool isCasinoBuild) {
 		var objs = isCasinoBuild ? casinoObjects : socialObjects;
 		var config = GetConfigForResolution(DetermineResolution());
+		Debug.Log ("USING SCREEN RES: " + config.resolution);
 		ConfigureObjectsForResolution(objs, config);
 	}
 	

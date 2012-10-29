@@ -17,6 +17,7 @@ public class MachineParser {
 		machineInfo.ParseSlots(jd["slots"]);
 		machineInfo.ParsePayouts(jd["payouts"]);
 		machineInfo.ParseLines (jd["lines"]);
+		machineInfo.ParseGemOdds(jd["gem_odds"]);
 		ParseReels(jd["reels"]);
 	}
 	

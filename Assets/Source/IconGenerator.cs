@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class IconGenerator : MonoBehaviour {
 	public Mesh baseMesh;
 	public List<IconInfo> iconInfo;
+	public List<GemInfo> gemInfo;
 	
 	private static IconGenerator sm_instance = null;
 	
@@ -34,8 +35,32 @@ public class IconGenerator : MonoBehaviour {
 				ai.FireAnimation("standard");
 			}
 		}
+		else {
+			toReturn.AddComponent<Icon>();
+		}
 		
 		return toReturn;
+	}
+	
+	public GameObject CreateGem(GemType type) {
+		var info = GetGemInfo(type);
+		var toReturn = new GameObject(info.name);
+		var mf = toReturn.AddComponent<MeshFilter>();
+		mf.mesh = baseMesh;
+		var mr = toReturn.AddComponent<MeshRenderer>();
+		mr.material = info.material;
+		toReturn.transform.localScale = info.scale;
+		
+		return toReturn;
+	}
+	
+	public GemInfo GetGemInfo(GemType type) {
+		foreach(var info in gemInfo) {
+			if(info.type == type) {
+				return info;
+			}
+		}
+		return null;
 	}
 	
 	public IconInfo GetIconInfo(string iconName) {
