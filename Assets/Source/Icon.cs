@@ -8,8 +8,8 @@ public class Icon : MonoBehaviour {
 	public void AddGem(GameObject toAdd) {
 		RemoveGem ();
 		gem = toAdd;
-		gem.transform.localPosition = new Vector3(30, 20, -0.1f);
 		gem.transform.parent = transform;
+		gem.transform.localPosition = new Vector3(0.375f, 0.375f, -0.1f);
 	}
 	
 	public void RemoveGem() {

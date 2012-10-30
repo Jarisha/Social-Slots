@@ -25,6 +25,10 @@ public class GameUI : MonoBehaviour {
 	
 	public AudioClip spinningSound;
 	
+	public UILabel redGemLabel;
+	public UILabel greenGemLabel;
+	public UILabel blueGemLabel;
+	
 	public bool[] m_reelDone = {true, true, true, true, true};
 	
 	int[] m_betAmounts = {
@@ -69,11 +73,24 @@ public class GameUI : MonoBehaviour {
 		if(spinning) {
 			if(spinData != null) {
 				SetTargets();
+				StartCoroutine(UpdateGems());
 			}
 			if(AllReelsFinished()) {
 				Debug.Log ("Handle Spin Results!");
 				HandleSpinResults();
 			}
+		}
+	}
+	
+	IEnumerator UpdateGems() {
+		yield return new WaitForSeconds(0.33f);
+		foreach(var reel in reels) {
+			reel.ClearGems();
+		}
+		var ig = IconGenerator.Instance();
+		foreach(var gem in spinData.gems) {
+			var icon = reels[gem.reel].icons[gem.idx].GetComponent<Icon>();
+			icon.AddGem(ig.CreateGem (gem.type));
 		}
 	}
 	
@@ -104,6 +121,9 @@ public class GameUI : MonoBehaviour {
 		spinning = false;
 		var winAmount = spinData.totalCredits;
 		ContentManager.Instance.Player.IncrementCredits(winAmount);
+		ContentManager.Instance.Player.IncrementRedGems(spinData.totalRedGems);
+		ContentManager.Instance.Player.IncrementGreenGems(spinData.totalGreenGems);
+		ContentManager.Instance.Player.IncrementBlueGems(spinData.totalBlueGems);
 		StartCoroutine(ShowSpinResults());
 		ResetReelChecks();
 		UpdateLabels();
@@ -112,6 +132,7 @@ public class GameUI : MonoBehaviour {
 	public void UpdateLabels() {
 		creditsLabel.text = string.Format("{0}c", ContentManager.Instance.Player.m_credits);
 		UpdateButtonInfo();
+		UpdateGemLabels();
 	}
 	
 	void ResetReelChecks() {
@@ -164,9 +185,10 @@ public class GameUI : MonoBehaviour {
 		UpdateLabels();
 		ResetReelChecks ();
 		if(this.USE_BAKED_LOGIC) {
-			DemoSpinner.Spin(spin, (jdata) => {
+			DemoSpinner.Spin(spin, (text) => {
 				Debug.Log ("Spin done!");
-				Debug.Log (jdata["results"]);
+				Debug.Log ("Got spin: " + text);
+				LitJson.JsonData jdata = LitJson.JsonMapper.ToObject<LitJson.JsonData>(text);			
 				spinData = new SpinResponse(jdata);
 			});
 		}
@@ -219,6 +241,13 @@ public class GameUI : MonoBehaviour {
 		UpdateLineColors();
 		UpdateLines ();
 		UpdatePayoutInfo();
+		UpdateGemLabels();
+	}
+	
+	void UpdateGemLabels() {
+		redGemLabel.text = ContentManager.Instance.Player.m_redGems.ToString();
+		greenGemLabel.text = ContentManager.Instance.Player.m_greenGems.ToString();
+		blueGemLabel.text = ContentManager.Instance.Player.m_blueGems.ToString();
 	}
 	
 	void ResetReelOwner() {

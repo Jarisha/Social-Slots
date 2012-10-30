@@ -183,4 +183,11 @@ public class Reel : MonoBehaviour {
 		this.target = target;
 		haveTarget = true;
 	}
+	
+	public void ClearGems() {
+		foreach(var go in icons) {
+			var icon = go.GetComponent<Icon>();
+			icon.RemoveGem();
+		}
+	}
 }

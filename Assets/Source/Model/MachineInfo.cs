@@ -138,7 +138,15 @@ public class MachineInfo {
 		}
 	}
 	
-	int[] GetAdjustedSpin(int[] baseSpin, int lineIdx) {
+	public int[] GetAdjustedSpin(int[] baseSpin, int lineIdx) {
+		var adjIndices = AdjustSpinIndexesWithLine(baseSpin, lineIdx);
+		for(var i = 0; i < 5; i++) {
+			adjIndices[i] = m_reels[i][adjIndices[i]];
+		}
+		return adjIndices;
+	}
+	
+	public int[] AdjustSpinIndexesWithLine(int[] baseSpin, int lineIdx) {
 		var toReturn = new int[5];
 		var offsets = m_lines[lineIdx];
 		for(var i = 0; i < 5; i++) {
@@ -150,7 +158,7 @@ public class MachineInfo {
 			if(idx >= m_reels[i].Count) {
 				idx -= m_reels[i].Count;
 			}
-			toReturn[i] = m_reels[i][idx];
+			toReturn[i] = idx;
 		}
 		return toReturn;
 	}

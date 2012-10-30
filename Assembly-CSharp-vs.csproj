@@ -138,6 +138,7 @@
      <Compile Include="Assets\Source\Icon.cs" />
      <Compile Include="Assets\Source\IconGenerator.cs" />
      <Compile Include="Assets\Source\LineMarker.cs" />
+     <Compile Include="Assets\Source\LogGui.cs" />
      <Compile Include="Assets\Source\Model\ContentManager.cs" />
      <Compile Include="Assets\Source\Model\MachineInfo.cs" />
      <Compile Include="Assets\Source\Model\Payout.cs" />

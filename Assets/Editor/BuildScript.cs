@@ -30,6 +30,7 @@ public class BuildScript {
 		PlayerSettings.allowedAutorotateToLandscapeRight = landscape;
 		PlayerSettings.allowedAutorotateToPortrait = portrait;
 		PlayerSettings.allowedAutorotateToPortraitUpsideDown = portrait;
+		PlayerSettings.defaultInterfaceOrientation = portrait ? UIOrientation.Portrait : UIOrientation.LandscapeLeft;
 	}
 	
 	public static void BuildAndroidCasino() {
@@ -51,14 +52,17 @@ public class BuildScript {
 	static void BuildAndroid(BuildTypes type) {
 		bool isCasino = (type == BuildTypes.CasinoSlots);
 		var currentSetting = EditorUserBuildSettings.activeBuildTarget;
-		var args = System.Environment.GetCommandLineArgs();
-		var outputLocation = args[args.Length - 1];
-		SetRotationOptions (isCasino, !isCasino);
-		PlayerSettings.productName = PRODUCT_NAMES[type];
-		PlayerSettings.bundleIdentifier = BUNDLE_IDENTIFIERS[type];
 		var scenes = (from scene in EditorBuildSettings.scenes where scene.enabled select scene.path).ToArray();
 		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.Android);
+		
+		var args = System.Environment.GetCommandLineArgs();
+		var outputLocation = args[args.Length - 1];
+		
+		SetRotationOptions (!isCasino, isCasino);
+		PlayerSettings.productName = PRODUCT_NAMES[type];
+		PlayerSettings.bundleIdentifier = BUNDLE_IDENTIFIERS[type];
 		GameObject.Find ("Init").GetComponent<InitScript>().IS_CASINO_BUILD = isCasino;
+		
 		BuildPipeline.BuildPlayer(scenes, outputLocation, BuildTarget.Android, BuildOptions.None);
 		EditorUserBuildSettings.SwitchActiveBuildTarget(currentSetting);
 	}
@@ -68,15 +72,17 @@ public class BuildScript {
 		var currentSetting = EditorUserBuildSettings.activeBuildTarget;
 		var scenes = (from scene in EditorBuildSettings.scenes where scene.enabled select scene.path).ToArray();
 		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.iPhone);
+		
 		EditorUserBuildSettings.appendProject = true;
 		var outputLocation = EditorUserBuildSettings.GetBuildLocation(BuildTarget.iPhone);
 		outputLocation = ReplaceXcodeWith(outputLocation, XCODE_LOCATIONS[type]);
+		
 		SetRotationOptions (!isCasino, isCasino);
 		PlayerSettings.productName = PRODUCT_NAMES[type];
 		PlayerSettings.bundleIdentifier = BUNDLE_IDENTIFIERS[type];
 		GameObject.Find ("Init").GetComponent<InitScript>().IS_CASINO_BUILD = isCasino;
-		BuildPipeline.BuildPlayer(scenes, outputLocation, BuildTarget.iPhone, 
-			BuildOptions.SymlinkLibraries);
+		
+		BuildPipeline.BuildPlayer(scenes, outputLocation, BuildTarget.iPhone, BuildOptions.SymlinkLibraries);
 		EditorUserBuildSettings.SwitchActiveBuildTarget(currentSetting);
 	}
 	

@@ -19,6 +19,8 @@ public class ResolutionAdjustObjects {
 	
 	public GameObject leftBar;
 	public GameObject rightBar;
+	
+	public GameObject gemInfo;
 }
 
 public class ResolutionHandler : MonoBehaviour {
@@ -68,7 +70,9 @@ public class ResolutionHandler : MonoBehaviour {
 	public ScreenResolution DetermineResolution() {
 		var width = Screen.width;
 		var height = Screen.height;
-		
+		Debug.Log ("Resolution from system: " + width + "," + height);
+		Debug.Log ("Can portrait autorotate: " + Screen.autorotateToPortrait);
+		Debug.Log ("Can landscape autorotate: " + Screen.autorotateToLandscapeLeft);
 		if((width > height && Screen.autorotateToPortrait) || (width < height && Screen.autorotateToLandscapeLeft)) {
 			Debug.Log ("Swapping aspect");
 			var tmp = width;
@@ -126,6 +130,8 @@ public class ResolutionHandler : MonoBehaviour {
 		UpdateHeight(objs.col2.transform, config.columnHeight);
 		UpdateHeight(objs.col3.transform, config.columnHeight);
 		UpdateHeight(objs.col4.transform, config.columnHeight);
+		
+		UpdateY(objs.gemInfo.transform, config.xpBGY);
 		
 		if(objs.leftBar != null) {
 			UpdateX(objs.leftBar.transform, config.leftBarX);
