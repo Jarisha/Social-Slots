@@ -53,8 +53,6 @@ public class ScreenConfig {
 	public float xpBGY;
 	public float xpLabelY;
 	
-	public float decorationsY;
-	
 	public float leftBarX;
 	public float rightBarX;
 	

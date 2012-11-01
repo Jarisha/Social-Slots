@@ -24,6 +24,8 @@ public class SpinResponse {
 	public int totalBlueGems;
 	public List<LinePayout> lines;
 	public List<GemLocation> gems;
+	public int wheelStop;
+	public int wheelReward;
 	public int[] reels;
 	
 	public SpinResponse(JsonData data) {
@@ -58,6 +60,18 @@ public class SpinResponse {
 		totalRedGems = (int)spinResults["total_red_gems"];
 		totalGreenGems = (int)spinResults["total_green_gems"];
 		totalBlueGems = (int)spinResults["total_blue_gems"];
+		if(totalCredits > 0) {
+			wheelStop = (int)spinResults["wheel"];
+		}
+		else {
+			wheelStop = -1;
+		}
+		var tmpDict = (IDictionary)spinResults;
+		foreach(var key in tmpDict.Keys) {
+			if(key.Equals("wheel_reward")) {
+				wheelReward = (int)spinResults["wheel_reward"];
+			}
+		}
 		xp = (int)spinResults["xp"];
 		
 		//Debug.Log ("Parsing line payouts");

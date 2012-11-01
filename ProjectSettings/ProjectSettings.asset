@@ -62,7 +62,7 @@ PlayerSettings:
     16:9: 1
     Others: 1
   iPhoneBundleIdentifier: com.slimstown.socialslots
-  iPhoneBundleVersion: 0.8
+  iPhoneBundleVersion: 0.8.2
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 8
   AndroidPreferredInstallLocation: 1

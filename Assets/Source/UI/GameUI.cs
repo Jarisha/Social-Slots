@@ -28,6 +28,7 @@ public class GameUI : MonoBehaviour {
 	public UILabel redGemLabel;
 	public UILabel greenGemLabel;
 	public UILabel blueGemLabel;
+	public Spinner spinner;
 	
 	public bool[] m_reelDone = {true, true, true, true, true};
 	
@@ -104,6 +105,16 @@ public class GameUI : MonoBehaviour {
 				m_visibleLines[i].StartFadeOut(0.66f);
 				yield return new WaitForSeconds(0.66f);
 			}
+		}
+		if(spinner != null && spinData.wheelStop != -1) {
+			var stop = (WheelStop)spinData.wheelStop;
+			spinner.Spin(stop, () => {
+				if(spinData.wheelReward > 0) {
+					spinner.ClearForMark(stop);
+					ContentManager.Instance.Player.IncrementCredits(spinData.wheelReward);
+				}
+			});
+			yield return new WaitForSeconds(2.2f);
 		}
 		spinButton.enabled = true;
 	}

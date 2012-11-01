@@ -11,7 +11,6 @@ public class ResolutionAdjustObjects {
 	public GameObject sky;
 	public GameObject creditsBG;
 	public GameObject creditsLabel;
-	public GameObject decorations;
 	public GameObject col1;
 	public GameObject col2;
 	public GameObject col3;
@@ -114,7 +113,6 @@ public class ResolutionHandler : MonoBehaviour {
 		UpdateY(objs.sky.transform, config.skyBgY);
 		UpdateY(objs.creditsBG.transform, config.xpBGY);
 		UpdateY(objs.creditsLabel.transform, config.xpLabelY);
-		UpdateY(objs.decorations.transform, config.decorationsY);
 		
 		UpdateY(objs.col1.transform, config.columnY);
 		UpdateY(objs.col2.transform, config.columnY);

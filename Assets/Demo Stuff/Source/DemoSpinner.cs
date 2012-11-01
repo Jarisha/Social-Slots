@@ -24,10 +24,123 @@ public class GemLocation {
 	}
 }
 
+public class WheelHits {
+	public bool[] red = new bool[] { false, false, false };
+	public bool[] yellow = new bool[] { false, false, false };
+	public bool[] blue = new bool[] { false, false, false };
+	public bool[] purple = new bool[] { false, false, false };
+	
+	public bool SetMark(WheelStop mark) {
+		switch(mark) {
+		case WheelStop.RED_1:
+			red[0] = true;
+			return RedIsFull();
+		case WheelStop.RED_2:
+			red[1] = true;
+			return RedIsFull();
+		case WheelStop.RED_3:
+			red[2] = true;
+			return RedIsFull();
+			
+		case WheelStop.PURPLE_1:
+			purple[0] = true;
+			return PurpleIsFull();
+		case WheelStop.PURPLE_2:
+			purple[1] = true;
+			return PurpleIsFull();
+		case WheelStop.PURPLE_3:
+			purple[2] = true;
+			return PurpleIsFull();
+			
+		case WheelStop.BLUE_1:
+			blue[0] = true;
+			return BlueIsFull();
+		case WheelStop.BLUE_2:
+			blue[1] = true;
+			return BlueIsFull();
+		case WheelStop.BLUE_3:
+			blue[2] = true;
+			return BlueIsFull();
+			
+		case WheelStop.YELLOW_1:
+			yellow[0] = true;
+			return YellowIsFull();
+		case WheelStop.YELLOW_2:
+			yellow[1] = true;
+			return YellowIsFull();
+		case WheelStop.YELLOW_3:
+			yellow[2] = true;
+			return YellowIsFull();
+		}
+		return false;
+	}
+	
+	public void ClearForMark(WheelStop mark) {
+		switch(mark) {
+		case WheelStop.RED_1:
+		case WheelStop.RED_2:
+		case WheelStop.RED_3:
+			Clear (red);
+			break;
+			
+		case WheelStop.PURPLE_1:
+		case WheelStop.PURPLE_2:
+		case WheelStop.PURPLE_3:
+			Clear (purple);
+			break;
+			
+		case WheelStop.BLUE_1:
+		case WheelStop.BLUE_2:
+		case WheelStop.BLUE_3:
+			Clear (blue);
+			break;
+			
+		case WheelStop.YELLOW_1:
+		case WheelStop.YELLOW_2:
+		case WheelStop.YELLOW_3:
+			Clear (yellow);
+			break;
+		}
+	}
+	
+	public bool RedIsFull() {
+		return IsFull (red);
+	}
+	
+	public bool YellowIsFull() {
+		return IsFull (yellow);
+	}
+	
+	public bool PurpleIsFull() {
+		return IsFull (purple);
+	}
+	
+	public bool BlueIsFull() {
+		return IsFull (blue);
+	}
+	
+	public void Clear(bool[] toClear) {
+		for(var i = 0; i < toClear.Length; i++) {
+			toClear[i] = false;
+		}
+	}
+	
+	bool IsFull(bool[] toCheck) {
+		foreach(var val in toCheck) {
+			if(!val) {
+				return false;
+			}
+		}
+		return true;
+	}
+}
+
 public class DemoSpinner {
 	
 	public static MachineInfo sm_info;
 	public static int NUM_GEMS_PER_REEL = 5;
+	public static WheelHits wheelHits = new WheelHits();
+	
 	
 	public static void Spin(Spin spin, Action<string> callback) {
 		var response = new Dictionary<string, object>();
@@ -65,6 +178,15 @@ public class DemoSpinner {
 			lines.Add (line);
 		}
 		results["total_credits"] = totalCredits;
+		if(totalCredits > 0) {
+			var wheel = GenerateWheelSpin();
+			results["wheel"] = (int)wheel;
+			if(wheelHits.SetMark(wheel)) {
+				results["wheel_reward"] = 10000;
+				wheelHits.ClearForMark(wheel);
+			}
+			// FIXME: Server side should be passing rewards when player has unlocked a set
+		}
 		results["total_red_gems"] = totalRed;
 		results["total_green_gems"] = totalGreen;
 		results["total_blue_gems"] = totalBlue;
@@ -72,6 +194,11 @@ public class DemoSpinner {
 		results["paylines"] = lines;
 		response["results"] = results;
 		return response;
+	}
+	
+	static WheelStop GenerateWheelSpin() {
+		// FIXME: Use odds from file
+		return (WheelStop)UnityEngine.Random.Range (0, 12);
 	}
 	
 	static List<GemLocation> GetGemLocations() {
