@@ -9,6 +9,7 @@ public class Player {
 	public int m_xp;
 	public int m_level;
 	public int m_credits;
+	public int m_gold;
 	public int m_redGems;
 	public int m_greenGems;
 	public int m_blueGems;
@@ -26,6 +27,7 @@ public class Player {
 		m_user = "Carrie";
 		m_xp = 0;
 		m_credits = 100000;
+		m_gold = 0;
 		m_redGems = 0;
 		m_greenGems = 0;
 		m_blueGems = 0;

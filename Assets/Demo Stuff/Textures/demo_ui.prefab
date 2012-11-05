@@ -43,13 +43,13 @@ MonoBehaviour:
     outer:
       serializedVersion: 2
       x: 1795
-      y: 1867
+      y: 1958
       width: 200
       height: 90
     inner:
       serializedVersion: 2
       x: 1795
-      y: 1867
+      y: 1958
       width: 200
       height: 90
     paddingLeft: 0
@@ -60,13 +60,13 @@ MonoBehaviour:
     outer:
       serializedVersion: 2
       x: 1795
-      y: 1958
+      y: 1867
       width: 200
       height: 90
     inner:
       serializedVersion: 2
       x: 1795
-      y: 1958
+      y: 1867
       width: 200
       height: 90
     paddingLeft: 0
@@ -76,14 +76,14 @@ MonoBehaviour:
   - name: bet-01
     outer:
       serializedVersion: 2
-      x: 1913
-      y: 1701
+      x: 0
+      y: 1134
       width: 90
       height: 90
     inner:
       serializedVersion: 2
-      x: 1913
-      y: 1701
+      x: 0
+      y: 1134
       width: 90
       height: 90
     paddingLeft: 0
@@ -93,14 +93,14 @@ MonoBehaviour:
   - name: lines_pressed-01
     outer:
       serializedVersion: 2
-      x: 1796
-      y: 1606
+      x: 0
+      y: 1225
       width: 90
       height: 90
     inner:
       serializedVersion: 2
-      x: 1796
-      y: 1606
+      x: 0
+      y: 1225
       width: 90
       height: 90
     paddingLeft: 0
@@ -110,14 +110,14 @@ MonoBehaviour:
   - name: lines-01
     outer:
       serializedVersion: 2
-      x: 1887
-      y: 1606
+      x: 0
+      y: 1316
       width: 90
       height: 90
     inner:
       serializedVersion: 2
-      x: 1887
-      y: 1606
+      x: 0
+      y: 1316
       width: 90
       height: 90
     paddingLeft: 0
@@ -127,14 +127,14 @@ MonoBehaviour:
   - name: bet_pressed-01
     outer:
       serializedVersion: 2
-      x: 0
-      y: 1445
+      x: 1924
+      y: 1572
       width: 90
       height: 90
     inner:
       serializedVersion: 2
-      x: 0
-      y: 1445
+      x: 1924
+      y: 1572
       width: 90
       height: 90
     paddingLeft: 0
@@ -162,13 +162,13 @@ MonoBehaviour:
     outer:
       serializedVersion: 2
       x: 0
-      y: 1344
+      y: 1033
       width: 40
       height: 100
     inner:
       serializedVersion: 2
       x: 1
-      y: 1345
+      y: 1034
       width: 38
       height: 98
     paddingLeft: 0
@@ -212,13 +212,13 @@ MonoBehaviour:
   - name: shade_bottom-01
     outer:
       serializedVersion: 2
-      x: 1538
+      x: 1667
       y: 1663
       width: 128
       height: 128
     inner:
       serializedVersion: 2
-      x: 1538
+      x: 1667
       y: 1663
       width: 128
       height: 128
@@ -229,13 +229,13 @@ MonoBehaviour:
   - name: shade_top-01
     outer:
       serializedVersion: 2
-      x: 1667
+      x: 1538
       y: 1663
       width: 128
       height: 128
     inner:
       serializedVersion: 2
-      x: 1667
+      x: 1538
       y: 1663
       width: 128
       height: 128
@@ -297,14 +297,14 @@ MonoBehaviour:
   - name: gem_green-01
     outer:
       serializedVersion: 2
-      x: 1796
-      y: 1697
+      x: 1667
+      y: 1568
       width: 116
       height: 94
     inner:
       serializedVersion: 2
-      x: 1796
-      y: 1697
+      x: 1667
+      y: 1568
       width: 116
       height: 94
     paddingLeft: .0603448264
@@ -314,14 +314,14 @@ MonoBehaviour:
   - name: gem_red-01
     outer:
       serializedVersion: 2
-      x: 1667
-      y: 1568
+      x: 1925
+      y: 1697
       width: 116
       height: 94
     inner:
       serializedVersion: 2
-      x: 1667
-      y: 1568
+      x: 1925
+      y: 1697
       width: 116
       height: 94
     paddingLeft: .0603448264
@@ -345,6 +345,108 @@ MonoBehaviour:
     paddingRight: .0341880359
     paddingTop: .212765962
     paddingBottom: .148936167
+  - name: dialog_bg-01
+    outer:
+      serializedVersion: 2
+      x: 1796
+      y: 1663
+      width: 128
+      height: 128
+    inner:
+      serializedVersion: 2
+      x: 1812
+      y: 1679
+      width: 92
+      height: 92
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: casino_gold-01
+    outer:
+      serializedVersion: 2
+      x: 1796
+      y: 1583
+      width: 127
+      height: 79
+    inner:
+      serializedVersion: 2
+      x: 1796
+      y: 1583
+      width: 127
+      height: 79
+    paddingLeft: .00787401572
+    paddingRight: 0
+    paddingTop: .316455692
+    paddingBottom: .303797454
+  - name: coin_icon-01
+    outer:
+      serializedVersion: 2
+      x: 0
+      y: 1407
+      width: 128
+      height: 128
+    inner:
+      serializedVersion: 2
+      x: 0
+      y: 1407
+      width: 128
+      height: 128
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: add_button_pressed-01
+    outer:
+      serializedVersion: 2
+      x: 41
+      y: 1075
+      width: 62
+      height: 58
+    inner:
+      serializedVersion: 2
+      x: 41
+      y: 1075
+      width: 62
+      height: 58
+    paddingLeft: .0161290318
+    paddingRight: .0161290318
+    paddingTop: .0517241396
+    paddingBottom: .0517241396
+  - name: add_button-01
+    outer:
+      serializedVersion: 2
+      x: 1925
+      y: 1806
+      width: 62
+      height: 60
+    inner:
+      serializedVersion: 2
+      x: 1925
+      y: 1806
+      width: 62
+      height: 60
+    paddingLeft: .0161290318
+    paddingRight: .0161290318
+    paddingTop: .0333333351
+    paddingBottom: .0333333351
+  - name: close_dialog_button-01
+    outer:
+      serializedVersion: 2
+      x: 1860
+      y: 1802
+      width: 64
+      height: 64
+    inner:
+      serializedVersion: 2
+      x: 1860
+      y: 1802
+      width: 64
+      height: 64
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
   mCoordinates: 0
   mPixelSize: 1
   mReplacement: {fileID: 0}

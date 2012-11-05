@@ -19,7 +19,7 @@ public class ResolutionAdjustObjects {
 	public GameObject leftBar;
 	public GameObject rightBar;
 	
-	public GameObject gemInfo;
+	public GameObject bankrollButton;
 }
 
 public class ResolutionHandler : MonoBehaviour {
@@ -129,7 +129,9 @@ public class ResolutionHandler : MonoBehaviour {
 		UpdateHeight(objs.col3.transform, config.columnHeight);
 		UpdateHeight(objs.col4.transform, config.columnHeight);
 		
-		UpdateY(objs.gemInfo.transform, config.xpBGY);
+		if(objs.bankrollButton != null) {
+			UpdateY (objs.bankrollButton.transform, config.xpBGY);
+		}
 		
 		if(objs.leftBar != null) {
 			UpdateX(objs.leftBar.transform, config.leftBarX);

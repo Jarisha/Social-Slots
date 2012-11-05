@@ -158,6 +158,8 @@
      <Compile Include="Assets\Source\Reel.cs" />
      <Compile Include="Assets\Source\SlotLine.cs" />
      <Compile Include="Assets\Source\Spinner.cs" />
+     <Compile Include="Assets\Source\UI\BankrollDialog.cs" />
+     <Compile Include="Assets\Source\UI\DialogManager.cs" />
      <Compile Include="Assets\Source\UI\GameSelectUI.cs" />
      <Compile Include="Assets\Source\UI\GameUI.cs" />
      <Compile Include="Assets\Source\UI\LoginUI.cs" />

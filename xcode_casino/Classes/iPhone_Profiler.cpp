@@ -110,11 +110,11 @@ namespace
 
 
 	int _frameId = 0;
+	int _gpuFrameCount = 0;
 
 	struct ProfilerBlock _framePB;
 	struct ProfilerBlock _presentPB;
 	struct ProfilerBlock _gpuPB;
-	struct ProfilerBlock _swapPB;
 	struct ProfilerBlock _playerPB;
 	struct ProfilerBlock _oglesPB;
 
@@ -145,13 +145,7 @@ namespace
 	Prof_Int64 _gpuDelta			= 0;
 	Prof_Int64 _swapStart			= 0;
 	Prof_Int64 _lastVBlankTime 		= -1;
-
 	Prof_Int64 _frameStart			= 0;
-	Prof_Int64 _loopStart			= 0;
-	Prof_Int64 _loopEnd				= 0;
-	Prof_Int64 _frameStartToLoopEnd	= 0;
-	Prof_Int64 _loopStartToFrameEnd = 0;
-	Prof_Int64 _loopEndToLoopStart	= 0;
 
 	Prof_Int64 _msaaResolveStart	= 0;
 	Prof_Int64 _msaaResolve			= 0;
@@ -191,20 +185,6 @@ void Profiler_UninitProfiler()
 }
 
 void
-Profiler_UnityLoopStart()
-{
-	_loopStart = mach_absolute_time();
-	_loopEndToLoopStart = _loopStart - _loopEnd;
-}
-
-void
-Profiler_UnityLoopEnd()
-{
-	_loopEnd = mach_absolute_time();
-	_frameStartToLoopEnd = _loopEnd - _frameStart;
-}
-
-void
 Profiler_FrameStart()
 {
 	_frameStart = mach_absolute_time();
@@ -223,14 +203,14 @@ Profiler_FrameEnd()
 
 		Prof_Int64 gpuTime1 = mach_absolute_time();
 		_gpuDelta = gpuTime1 - gpuTime0;
+		_gpuFrameCount++;
 	}
 	else
 	{
 		_gpuDelta = 0;
 	}
 
-	_swapStart 			 = mach_absolute_time();
-	_loopStartToFrameEnd = _swapStart - _loopStart;
+	_swapStart = mach_absolute_time();
 }
 
 void
@@ -244,17 +224,13 @@ Profiler_FrameUpdate(const struct UnityFrameStats* unityFrameStats)
 	if( firstFrame )
 	{
 		_lastVBlankTime = vblankTime;
-
 		firstFrame = false;
-		return; // skip first frame
+		return;
 	}
-
-	// add time spent in present itself to present counter
-	_loopEndToLoopStart += (vblankTime - _swapStart);
 
 	Prof_Int64 frameDelta  = vblankTime - _lastVBlankTime;
 	Prof_Int64 swapDelta   = vblankTime - _swapStart;
-	Prof_Int64 playerDelta = _loopStartToFrameEnd + _frameStartToLoopEnd - _gpuDelta - _unityFrameStats.drawCallTime;
+	Prof_Int64 playerDelta = _swapStart - _frameStart - _gpuDelta - _unityFrameStats.drawCallTime;
 
 	_lastVBlankTime = vblankTime;
 
@@ -268,7 +244,8 @@ Profiler_FrameUpdate(const struct UnityFrameStats* unityFrameStats)
 		printf_console("cpu-ogles-drv> min: %4.1f   max: %4.1f   avg: %4.1f\n", MachToMillisecondsDelta(_oglesPB.minV), MachToMillisecondsDelta(_oglesPB.maxV), MachToMillisecondsDelta(_oglesPB.avgV / EachNthFrame));
 		printf_console("cpu-present>   min: %4.1f   max: %4.1f   avg: %4.1f\n", MachToMillisecondsDelta(_presentPB.minV), MachToMillisecondsDelta(_presentPB.maxV), MachToMillisecondsDelta(_presentPB.avgV / EachNthFrame));
 #if ENABLE_BLOCK_ON_GPU_PROFILER
-		printf_console("gpu>           min: %4.1f   max: %4.1f   avg: %4.1f\n", MachToMillisecondsDelta(_gpuPB.minV), MachToMillisecondsDelta(_gpuPB.maxV), MachToMillisecondsDelta((BLOCK_ON_GPU_EACH_NTH_FRAME*(int)_gpuPB.avgV) / EachNthFrame));
+		printf_console("gpu>           min: %4.1f   max: %4.1f   avg: %4.1f\n", MachToMillisecondsDelta(_gpuPB.minV), MachToMillisecondsDelta(_gpuPB.maxV), MachToMillisecondsDelta(_gpuPB.avgV) / _gpuFrameCount);
+		_gpuFrameCount = 0;
 #endif
 		// only pay attention if wait-for-gpu is significant (2 milliseconds)
 		const float waitForGpuThreshold = 2.0f * EachNthFrame;
@@ -296,12 +273,11 @@ Profiler_FrameUpdate(const struct UnityFrameStats* unityFrameStats)
 #endif
 					   (int)_fixedUpdateCountPB.minV, (int)_fixedUpdateCountPB.maxV);
 		printf_console("mono-scripts>  update: %4.1f   fixedUpdate: %4.1f coroutines: %4.1f \n", MachToMillisecondsDelta(_dynamicBehaviourManagerPB.avgV / EachNthFrame), MachToMillisecondsDelta(_fixedBehaviourManagerPB.avgV / EachNthFrame), MachToMillisecondsDelta(_coroutinePB.avgV / EachNthFrame));
-		printf_console("mono-memory>   used heap: %d allocated heap: %d  max number of collections: %d collection total duration: %4.1f\n", mono_gc_get_used_size(), mono_gc_get_heap_size(), (int)_GCCountPB.avgV, MachToMillisecondsDelta(_GCDurationPB.avgV));
+		printf_console("mono-memory>   used heap: %ld allocated heap: %ld  max number of collections: %d collection total duration: %4.1f\n", mono_gc_get_used_size(), mono_gc_get_heap_size(), (int)_GCCountPB.avgV, MachToMillisecondsDelta(_GCDurationPB.avgV));
 		printf_console("----------------------------------------\n");
 	}
 	ProfilerBlock_Update(&_framePB, frameDelta, (_frameId == 0));
-	ProfilerBlock_Update(&_presentPB, _loopEndToLoopStart, (_frameId == 0));
-	ProfilerBlock_Update(&_swapPB, swapDelta, (_frameId == 0));
+	ProfilerBlock_Update(&_presentPB, swapDelta, (_frameId == 0));
 
 	ProfilerBlock_Update(&_gpuPB, _gpuDelta, (_frameId == 0), true);
 	ProfilerBlock_Update(&_playerPB, playerDelta, (_frameId == 0));

@@ -12,6 +12,8 @@ PlayerSettings:
   accelerometerFrequency: 0
   companyName: Slimstown
   productName: Social Slots
+  defaultCursor: {fileID: 0}
+  cursorHotspot: {x: 0, y: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
   defaultScreenWidthWeb: 480
@@ -36,6 +38,7 @@ PlayerSettings:
   Override IPod Music: 0
   usePlayerLog: 1
   stripPhysics: 0
+  resizableWindow: 0
   useMacAppStoreValidation: 0
   xboxSkinOnGPU: 1
   xboxEnableAvatar: 0
@@ -62,7 +65,7 @@ PlayerSettings:
     16:9: 1
     Others: 1
   iPhoneBundleIdentifier: com.slimstown.socialslots
-  iPhoneBundleVersion: 0.8.2
+  iPhoneBundleVersion: 0.8.3
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 8
   AndroidPreferredInstallLocation: 1
@@ -85,6 +88,7 @@ PlayerSettings:
   iPhoneSplashScreen: {fileID: 2800000, guid: 34d111037ebeb48d9a9908483482d096, type: 3}
   iPhoneHighResSplashScreen: {fileID: 2800000, guid: 34d111037ebeb48d9a9908483482d096,
     type: 3}
+  iPhoneTallHighResSplashScreen: {fileID: 0}
   iPadPortraitSplashScreen: {fileID: 2800000, guid: bdd49551229f3419bb7e78ab269fcf61,
     type: 3}
   iPadHighResPortraitSplashScreen: {fileID: 0}
@@ -115,7 +119,7 @@ PlayerSettings:
   wiiControllerCount: 1
   wiiFloatingPointExceptions: 0
   wiiScreenCrashDumps: 1
-  wiiMemoryLabelCount: 153
+  wiiMemoryLabelCount: 155
   wiiMemorySetup: 0000000000000000000000000000000000000000
   XboxTitleId: 
   XboxImageXexPath: 
@@ -124,6 +128,7 @@ PlayerSettings:
   XboxDeployKinectResources: 0
   XboxSplashScreen: {fileID: 0}
   xboxEnableSpeech: 0
+  xboxAdditionalTitleMemorySize: 0
   ps3TitleConfigPath: 
   ps3DLCConfigPath: 
   ps3ThumbnailPath: 
@@ -137,6 +142,25 @@ PlayerSettings:
   ps3TrialMode: 0
   flashStrippingLevel: 2
   scriptingDefineSymbols: {}
+  metroPackageName: 
+  metroPackageLogo: 
+  metroPackageVersion: 
+  metroCertificatePath: 
+  metroCertificatePassword: 
+  metroCertificateSubject: 
+  metroCertificateIssuer: 
+  metroCertificateNotAfter: 0000000000000000
+  metroApplicationDescription: 
+  metroTileLogo: 
+  metroTileWideLogo: 
+  metroTileSmallLogo: 
+  metroTileShortName: 
+  metroTileShowName: 0
+  metroTileForegroundText: 1
+  metroTileBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  metroSplashScreenImage: 
+  metroSplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  metroSplashScreenUseBackgroundColor: 0
   firstStreamedLevelWithResources: 0
   unityRebuildLibraryVersion: 9
   unityForwardCompatibleVersion: 37

@@ -19,7 +19,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>CFBundleVersion</key>
-	<string>0.8.2</string>
+	<string>0.8.3</string>
 	<key>CFBundleDisplayName</key>
 	<string>Social Slots</string>
 	<key>CFBundleIconFiles</key>

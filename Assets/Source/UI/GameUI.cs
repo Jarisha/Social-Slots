@@ -25,9 +25,6 @@ public class GameUI : MonoBehaviour {
 	
 	public AudioClip spinningSound;
 	
-	public UILabel redGemLabel;
-	public UILabel greenGemLabel;
-	public UILabel blueGemLabel;
 	public Spinner spinner;
 	
 	public bool[] m_reelDone = {true, true, true, true, true};
@@ -144,7 +141,6 @@ public class GameUI : MonoBehaviour {
 	public void UpdateLabels() {
 		creditsLabel.text = string.Format("{0}c", ContentManager.Instance.Player.m_credits);
 		UpdateButtonInfo();
-		UpdateGemLabels();
 	}
 	
 	void ResetReelChecks() {
@@ -253,13 +249,6 @@ public class GameUI : MonoBehaviour {
 		UpdateLineColors();
 		UpdateLines ();
 		UpdatePayoutInfo();
-		UpdateGemLabels();
-	}
-	
-	void UpdateGemLabels() {
-		redGemLabel.text = ContentManager.Instance.Player.m_redGems.ToString();
-		greenGemLabel.text = ContentManager.Instance.Player.m_greenGems.ToString();
-		blueGemLabel.text = ContentManager.Instance.Player.m_blueGems.ToString();
 	}
 	
 	void ResetReelOwner() {

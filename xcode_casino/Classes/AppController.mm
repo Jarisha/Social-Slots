@@ -1,4 +1,5 @@
 #import "AppController.h"
+#import "iPhone_Sensors.h"
 
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
@@ -82,8 +83,8 @@
 #define FALLBACK_LOOP_TYPE THREAD_BASED_LOOP
 //#define FALLBACK_LOOP_TYPE EVENT_PUMP_BASED_LOOP
 
-
 #include "iPhone_Common.h"
+#include "iPhone_OrientationSupport.h"
 #include "iPhone_GlesSupport.h"
 
 // ENABLE_INTERNAL_PROFILER and related defines were moved to iPhone_Profiler.h
@@ -96,11 +97,11 @@
 //
 
 #if FALLBACK_LOOP_TYPE == NSTIMER_BASED_LOOP
-#define kThrottleFPS							2.0
+#define kThrottleFPS                            2.0
 #endif
 
 #if FALLBACK_LOOP_TYPE == EVENT_PUMP_BASED_LOOP
-#define kMillisecondsPerFrameToProcessEvents	3
+#define kMillisecondsPerFrameToProcessEvents    3
 #endif
 
 // kFPS define for removed
@@ -108,7 +109,7 @@
 
 // Time to process events in seconds.
 // Only used when display link loop is enabled.
-#define kInputProcessingTime					0.001
+#define kInputProcessingTime                    0.001
 
 // --- Unity ------------------------------------------------------------------
 //
@@ -123,11 +124,12 @@ void UnityReloadResources();
 void UnitySetAudioSessionActive(bool active);
 void UnityCleanup();
 
+void UnityGLInvalidateState();
+
 void UnitySendLocalNotification(UILocalNotification* notification);
 void UnitySendRemoteNotification(NSDictionary* notification);
 void UnitySendDeviceToken(NSData* deviceToken);
 void UnitySendRemoteNotificationError(NSError* error);
-void UnityDidAccelerate(float x, float y, float z, NSTimeInterval timestamp);
 void UnityInputProcess();
 bool UnityIsRenderingAPISupported(int renderingApi);
 void UnitySetInputScaleFactor(float scale);
@@ -136,18 +138,17 @@ int  UnityGetTargetFPS();
 
 bool UnityUse32bitDisplayBuffer();
 
-int 	UnityGetDesiredMSAASampleCount(int defaultSampleCount);
-void 	UnityGetRenderingResolution(unsigned* w, unsigned* h);
-int		UnityGetAccelerometerFrequency();
+int     UnityGetDesiredMSAASampleCount(int defaultSampleCount);
+void    UnityGetRenderingResolution(unsigned* w, unsigned* h);
 
 enum TargetResolution
 {
-	kTargetResolutionNative = 0,
-	kTargetResolutionAutoPerformance = 3,
-	kTargetResolutionAutoQuality = 4,
-	kTargetResolution320p = 5,
-	kTargetResolution640p = 6,
-	kTargetResolution768p = 7
+    kTargetResolutionNative = 0,
+    kTargetResolutionAutoPerformance = 3,
+    kTargetResolutionAutoQuality = 4,
+    kTargetResolution320p = 5,
+    kTargetResolution640p = 6,
+    kTargetResolution768p = 7
 };
 
 int UnityGetTargetResolution();
@@ -155,26 +156,26 @@ int UnityGetDeviceGeneration();
 void UnityRequestRenderingResolution(unsigned w, unsigned h);
 
 
-bool	_ios30orNewer		= false;
-bool	_ios31orNewer		= false;
-bool	_ios43orNewer		= false;
-bool	_ios50orNewer		= false;
+bool    _ios30orNewer       = false;
+bool    _ios31orNewer       = false;
+bool    _ios43orNewer       = false;
+bool    _ios50orNewer       = false;
+bool    _ios60orNewer       = false;
 
-bool	_supportsDiscard	= false;
-bool	_supportsMSAA 		= false;
+bool    _supportsDiscard    = false;
+bool    _supportsMSAA       = false;
 
-EAGLSurfaceDesc	_surface;
+EAGLSurfaceDesc _surface;
 
-bool	_glesContextCreated	= false;
-bool	_unityLevelReady	= false;
-bool	_skipPresent		= false;
-
-
+bool    _glesContextCreated = false;
+bool    _unityLevelReady    = false;
+bool    _skipPresent        = false;
+bool    _recreateSurface    = false;
 
 class KeyboardOnScreen
 {
 public:
-	static void Init();
+    static void Init();
 };
 
 
@@ -196,223 +197,200 @@ extern GLint gDefaultFBO;
 @end
 
 
-typedef EAGLContext*	MyEAGLContext;
+typedef EAGLContext*    MyEAGLContext;
 
 
-MyEAGLContext			_context;
+MyEAGLContext           _context;
 
-NSTimer*				_timer;
-bool					_need_recreate_timer = false;
-id						_displayLink;
-BOOL					_accelerometerIsActive = NO;
+NSTimer*                _timer;
+bool                    _need_recreate_timer = false;
+id                      _displayLink;
+extern BOOL             _accelerometerIsActive;
 // This is set to true when applicationWillResignActive gets called. It is here
 // to prevent calling SetPause(false) from applicationDidBecomeActive without
 // previous call to applicationWillResignActive
-BOOL					_didResignActive = NO;
+BOOL                    _didResignActive = NO;
 
 bool CreateSurface(EAGLView *view, EAGLSurfaceDesc* surface);
 void DestroySurface(EAGLSurfaceDesc* surface);
 
 bool CreateWindowSurface(EAGLView *view, GLuint format, GLuint depthFormat, GLuint msaaSamples, bool retained, EAGLSurfaceDesc* surface)
 {
-	::memset(surface, 0x00, sizeof(EAGLSurfaceDesc));
-	surface->eaglLayer = (CAEAGLLayer*)[view layer];
+    ::memset(surface, 0x00, sizeof(EAGLSurfaceDesc));
+    surface->eaglLayer = (CAEAGLLayer*)[view layer];
 
-	surface->format = format;
-	surface->depthFormat = depthFormat;
-	surface->msaaSamples = _supportsMSAA ? msaaSamples : 0;
+    surface->format = format;
+    surface->depthFormat = depthFormat;
+    surface->msaaSamples = _supportsMSAA ? msaaSamples : 0;
 
-	surface->systemFramebuffer  = 0;
-	surface->systemRenderbuffer = 0;
+    surface->systemFramebuffer  = 0;
+    surface->systemRenderbuffer = 0;
 
-	surface->targetFramebuffer  = 0;
-	surface->targetRT 			= 0;
+    surface->targetFramebuffer  = 0;
+    surface->targetRT           = 0;
 
-	surface->msaaFramebuffer 	= 0;
-	surface->msaaRenderbuffer 	= 0;
+    surface->msaaFramebuffer    = 0;
+    surface->msaaRenderbuffer   = 0;
 
-	surface->depthbuffer 		= 0;
+    surface->depthbuffer        = 0;
 
-	surface->systemW = surface->systemH = 0;
-	surface->targetW = surface->targetH = 0;
+    surface->systemW = surface->systemH = 0;
+    surface->targetW = surface->targetH = 0;
 
-	surface->use32bitColor = UnityUse32bitDisplayBuffer();
+    surface->use32bitColor = UnityUse32bitDisplayBuffer();
 
-	return CreateSurface(view, &_surface);
+    return CreateSurface(view, &_surface);
 }
 
 extern "C" void InitEAGLLayer(void* eaglLayer, bool use32bitColor)
 {
-	CAEAGLLayer* layer = (CAEAGLLayer*)eaglLayer;
+    CAEAGLLayer* layer = (CAEAGLLayer*)eaglLayer;
 
-	const NSString* colorFormat = use32bitColor ? kEAGLColorFormatRGBA8 : kEAGLColorFormatRGB565;
+    const NSString* colorFormat = use32bitColor ? kEAGLColorFormatRGBA8 : kEAGLColorFormatRGB565;
 
-	layer.opaque = YES;
-	layer.drawableProperties =	[NSDictionary dictionaryWithObjectsAndKeys:
-									[NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking,
-									colorFormat, kEAGLDrawablePropertyColorFormat,
-									nil
-								];
+    layer.opaque = YES;
+    layer.drawableProperties =  [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking,
+                                    colorFormat, kEAGLDrawablePropertyColorFormat,
+                                    nil
+                                ];
 }
 extern "C" bool AllocateRenderBufferStorageFromEAGLLayer(void* eaglLayer)
 {
-	return [_context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:(CAEAGLLayer*)eaglLayer];
+    return [_context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:(CAEAGLLayer*)eaglLayer];
 }
 extern "C" void DeallocateRenderBufferStorageFromEAGLLayer()
 {
-	[_context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:nil];
+    [_context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:nil];
 }
 
 static void
-SetupTargetResolution(EAGLSurfaceDesc* surface, bool supportScaleFactor)
+SetupTargetResolution(EAGLSurfaceDesc* surface)
 {
-	// while this may look stupid, we call that function from inside unity render loop
-	// so dont fiddle with resoltion right away, but postpone till the end of the frame
-	int targetRes = UnityGetTargetResolution();
+    // while this may look stupid, we call that function from inside unity render loop
+    // so dont fiddle with resoltion right away, but postpone till the end of the frame
+    int targetRes = UnityGetTargetResolution();
 
-	float resMult = 1.0f;
-	if(targetRes == kTargetResolutionAutoPerformance)
-	{
-		switch(UnityGetDeviceGeneration())
-		{
-			case deviceiPhone4:
-				resMult = 0.6f;
-			case deviceiPad1Gen:
-				resMult = 0.5f;
-				break;
+    float resMult = 1.0f;
+    if(targetRes == kTargetResolutionAutoPerformance)
+    {
+        switch(UnityGetDeviceGeneration())
+        {
+            case deviceiPhone4:     resMult = 0.6f;     break;
+            case deviceiPad1Gen:    resMult = 0.5f;     break;
 
-			default:
-				resMult = 0.75f;
-		}
-	}
+            default:                resMult = 0.75f;
+        }
+    }
 
-	if(targetRes == kTargetResolutionAutoQuality)
-	{
-		switch(UnityGetDeviceGeneration())
-		{
-			case deviceiPhone4:
-				resMult = 0.8f;
-			case deviceiPad1Gen:
-				resMult = 0.75f;
-				break;
+    if(targetRes == kTargetResolutionAutoQuality)
+    {
+        switch(UnityGetDeviceGeneration())
+        {
+            case deviceiPhone4:     resMult = 0.8f;     break;
+            case deviceiPad1Gen:    resMult = 0.75f;    break;
 
-			default:
-				resMult = 1.0f;
-		}
-	}
+            default:                resMult = 1.0f;
+        }
+    }
 
-	unsigned targetW = surface->systemW;
-	unsigned targetH = surface->systemH;
+    unsigned targetW = surface->systemW;
+    unsigned targetH = surface->systemH;
 
-	switch( targetRes )
-	{
-		case kTargetResolution320p:
-			targetW = 320;
-			targetH = 480;
-			break;
+    switch( targetRes )
+    {
+        case kTargetResolution320p:
+            targetW = 320;
+            targetH = 480;
+            break;
 
-		case kTargetResolution640p:
-			targetW = 640;
-			targetH = 960;
-			break;
+        case kTargetResolution640p:
+            targetW = 640;
+            targetH = 960;
+            break;
 
-		case kTargetResolution768p:
-			targetW = 768;
-			targetH = 1024;
-			break;
+        case kTargetResolution768p:
+            targetW = 768;
+            targetH = 1024;
+            break;
 
-		case kTargetResolutionAutoPerformance:
-		case kTargetResolutionAutoQuality:
-			targetW = surface->systemW * resMult;
-			targetH = surface->systemH * resMult;
-			break;
-	}
+        case kTargetResolutionAutoPerformance:
+        case kTargetResolutionAutoQuality:
+            targetW = surface->systemW * resMult;
+            targetH = surface->systemH * resMult;
+            break;
+    }
 
-	surface->targetW = targetW;
-	surface->targetH = targetH;
+    surface->targetW = targetW;
+    surface->targetH = targetH;
 }
 
 
 bool CreateSurface(EAGLView *view, EAGLSurfaceDesc* surface)
 {
-	CAEAGLLayer* eaglLayer = (CAEAGLLayer*)surface->eaglLayer;
-	assert(eaglLayer == [view layer]);
+    CAEAGLLayer* eaglLayer = (CAEAGLLayer*)surface->eaglLayer;
+    assert(eaglLayer == [view layer]);
 
-	CGSize newSize = [eaglLayer bounds].size;
-	newSize.width  = roundf(newSize.width);
-	newSize.height = roundf(newSize.height);
+    CGSize newSize = [eaglLayer bounds].size;
+    newSize.width  = roundf(newSize.width) * ScreenScaleFactor();
+    newSize.height = roundf(newSize.height) * ScreenScaleFactor();
+    UnitySetInputScaleFactor(ScreenScaleFactor());
 
-	bool supportScaleFactor = false;
+    surface->systemW = (unsigned)newSize.width;
+    surface->systemH = (unsigned)newSize.height;
 
-#ifdef __IPHONE_4_0
-	supportScaleFactor =    [view respondsToSelector:@selector(setContentScaleFactor:)]
-						 && [[UIScreen mainScreen] respondsToSelector:@selector(scale)];
+    // if we recreate surface due to orientation change we don't want to tweak resolution
+    if( surface->targetW == 0 || surface->targetH == 0 )
+        SetupTargetResolution(surface);
 
-	if(supportScaleFactor)
-	{
-		CGFloat scaleFactor = [UIScreen mainScreen].scale;
-		[view setContentScaleFactor:scaleFactor];
-		newSize.width = roundf(newSize.width * scaleFactor);
-		newSize.height = roundf(newSize.height * scaleFactor);
-		UnitySetInputScaleFactor(scaleFactor);
-	}
-#endif
-
-	surface->systemW = (unsigned)newSize.width;
-	surface->systemH = (unsigned)newSize.height;
-
-	// if we recreate surface due to orientation change we don't want to tweak resolution
-	if( surface->targetW == 0 || surface->targetH == 0 )
-		SetupTargetResolution(surface, supportScaleFactor);
-
-	CreateSurfaceGLES(surface);
-	return true;
+    CreateSurfaceGLES(surface);
+    return true;
 }
 
 
 void DestroySurface(EAGLSurfaceDesc* surface)
 {
-	EAGLContext *oldContext = [EAGLContext currentContext];
+    EAGLContext *oldContext = [EAGLContext currentContext];
 
-	if (oldContext != _context)
-		[EAGLContext setCurrentContext:_context];
+    if (oldContext != _context)
+        [EAGLContext setCurrentContext:_context];
 
-	UnityFinishRendering();
-	DestroySurfaceGLES(surface);
+    UnityFinishRendering();
+    DestroySurfaceGLES(surface);
 
-	if (oldContext != _context)
-		[EAGLContext setCurrentContext:oldContext];
+    if (oldContext != _context)
+        [EAGLContext setCurrentContext:oldContext];
 }
 
 void PresentSurface(EAGLSurfaceDesc* surface)
 {
-	if(_skipPresent || _didResignActive)
-	{
-		UNITY_DBG_LOG ("SKIP PresentSurface %s\n", _didResignActive ? "due to going to background":"");
-		return;
-	}
-	UNITY_DBG_LOG ("PresentSurface:\n");
+    if(_skipPresent || _didResignActive)
+    {
+        UNITY_DBG_LOG ("SKIP PresentSurface %s\n", _didResignActive ? "due to going to background":"");
+        return;
+    }
+    UNITY_DBG_LOG ("PresentSurface:\n");
 
-	EAGLContext *oldContext = [EAGLContext currentContext];
-	if (oldContext != _context)
-		[EAGLContext setCurrentContext:_context];
+    EAGLContext *oldContext = [EAGLContext currentContext];
+    if (oldContext != _context)
+        [EAGLContext setCurrentContext:_context];
 
-	PreparePresentSurfaceGLES(surface);
+    PreparePresentSurfaceGLES(surface);
 
-	// presentRenderbuffer presents currently bound RB, so make sure we have the correct one bound
-	GLES_CHK( glBindRenderbufferOES(GL_RENDERBUFFER_OES, surface->systemRenderbuffer) );
-	if(![_context presentRenderbuffer:GL_RENDERBUFFER_OES])
-		printf_console("failed to present renderbuffer (%s:%i)\n", __FILE__, __LINE__ );
+    // presentRenderbuffer presents currently bound RB, so make sure we have the correct one bound
+    GLES_CHK( glBindRenderbufferOES(GL_RENDERBUFFER_OES, surface->systemRenderbuffer) );
+    if(![_context presentRenderbuffer:GL_RENDERBUFFER_OES])
+        printf_console("failed to present renderbuffer (%s:%i)\n", __FILE__, __LINE__ );
 
-	AfterPresentSurfaceGLES(surface);
+    AfterPresentSurfaceGLES(surface);
 
-	if(oldContext != _context)
-		[EAGLContext setCurrentContext:oldContext];
+    if(oldContext != _context)
+        [EAGLContext setCurrentContext:oldContext];
 }
 
 void RecreateSurface(EAGLSurfaceDesc* surface, bool insideRepaint)
 {
-	if( _glesContextCreated )
+    if(_glesContextCreated)
     {
         DestroySurface(surface);
         UnityGetRenderingResolution(&surface->targetW, &surface->targetH);
@@ -420,102 +398,93 @@ void RecreateSurface(EAGLSurfaceDesc* surface, bool insideRepaint)
 
         if(_unityLevelReady)
         {
-	        // seems like ios sometimes got confused about abrupt swap chain destroy
-	        // draw 2 times to fill both buffers
-	        // present only once to make sure correct image goes to CA
-	        // if we are inside Repaint redraw only once without present - second one will be done in Reapoint itself
-	        _skipPresent = true;
-	        {
-	            UnityPlayerLoop();
-	            if(!insideRepaint)
-	            	UnityPlayerLoop();
-	            UnityFinishRendering();
-	        }
-	        _skipPresent = false;
-	        if(!insideRepaint)
-	        	PresentSurface(&_surface);
-	    }
+            // seems like ios sometimes got confused about abrupt swap chain destroy
+            // draw 2 times to fill both buffers
+            // present only once to make sure correct image goes to CA
+            // if we are inside Repaint redraw only once without present - second one will be done in Reapoint itself
+            _skipPresent = true;
+            {
+                UnityPlayerLoop();
+                if(!insideRepaint)
+                    UnityPlayerLoop();
+                UnityFinishRendering();
+            }
+            _skipPresent = false;
+            if(!insideRepaint)
+                PresentSurface(&_surface);
+        }
     }
 }
 
 void PresentContext_UnityCallback(struct UnityFrameStats const* unityFrameStats)
 {
-	Profiler_FrameEnd();
-
-	PresentSurface(&_surface);
-
-	Profiler_FrameUpdate(unityFrameStats);
-	Profiler_FrameStart();
+    Profiler_FrameEnd();
+    PresentSurface(&_surface);
+    Profiler_FrameUpdate(unityFrameStats);
 }
 
 
 int OpenEAGL_UnityCallback(UIWindow** window, int* screenWidth, int* screenHeight,  int* openglesVersion)
 {
-	CreateViewHierarchy();
+    // TODO: in splash do use info.plist values and push creation earlier
+    CreateViewHierarchy();
 
-#if defined(__IPHONE_3_0)
-	int openglesApi = kEAGLRenderingAPIOpenGLES2;
-#else
-	int openglesApi = kEAGLRenderingAPIOpenGLES1;
-#endif
+    for (int openglesApi = kEAGLRenderingAPIOpenGLES2 ; openglesApi >= kEAGLRenderingAPIOpenGLES1 && !_context ; --openglesApi)
+    {
+        if (!UnityIsRenderingAPISupported(openglesApi))
+            continue;
 
-	for (; openglesApi >= kEAGLRenderingAPIOpenGLES1 && !_context; --openglesApi)
-	{
-		if (!UnityIsRenderingAPISupported(openglesApi))
-			continue;
+        _context = [[EAGLContext alloc] initWithAPI:openglesApi];
+    }
 
-		_context = [[EAGLContext alloc] initWithAPI:openglesApi];
-	}
+    if (!_context)
+        return false;
 
-	if (!_context)
-		return false;
+    if (![EAGLContext setCurrentContext:_context]) {
+        _context = 0;
+        return false;
+    }
 
-	if (![EAGLContext setCurrentContext:_context]) {
-		_context = 0;
-		return false;
-	}
+    const GLuint colorFormat = UnityUse32bitDisplayBuffer() ? GL_RGBA8_OES : GL_RGB565_OES;
 
-	const GLuint colorFormat = UnityUse32bitDisplayBuffer() ? GL_RGBA8_OES : GL_RGB565_OES;
+    if( !CreateWindowSurface( (EAGLView*)UnityGetGLView(), colorFormat, GL_DEPTH_COMPONENT16_OES,
+                              UnityGetDesiredMSAASampleCount(MSAA_DEFAULT_SAMPLE_COUNT), NO, &_surface
+                            )
+      )
+    {
+        return false;
+    }
 
-	if( !CreateWindowSurface( (EAGLView*)UnityGetGLView(), colorFormat, GL_DEPTH_COMPONENT16_OES,
-							  UnityGetDesiredMSAASampleCount(MSAA_DEFAULT_SAMPLE_COUNT), NO, &_surface
-		 					)
-	  )
-	{
-		return false;
-	}
+    glViewport(0, 0, _surface.targetW, _surface.targetH);
 
-	glViewport(0, 0, _surface.targetW, _surface.targetH);
-	[UnityGetMainWindow() makeKeyAndVisible];
+    *window = UnityGetMainWindow();
+    *screenWidth = _surface.targetW;
+    *screenHeight = _surface.targetH;
+    *openglesVersion = _context.API;
 
-	*window = UnityGetMainWindow();
-	*screenWidth = _surface.targetW;
-	*screenHeight = _surface.targetH;
-	*openglesVersion = _context.API;
+    _glesContextCreated = true;
 
-	_glesContextCreated = true;
-
-	return true;
+    return true;
 }
 
 void NotifyFramerateChange(int targetFPS)
 {
-	if( targetFPS <= 0 )
-		targetFPS = 60;
+    if( targetFPS <= 0 )
+        targetFPS = 60;
 
 #if USE_DISPLAY_LINK_IF_AVAILABLE
-	if (_displayLink)
-	{
-		int animationFrameInterval = (60.0 / (targetFPS));
-		if (animationFrameInterval < 1)
-			animationFrameInterval = 1;
+    if (_displayLink)
+    {
+        int animationFrameInterval = (60.0 / (targetFPS));
+        if (animationFrameInterval < 1)
+            animationFrameInterval = 1;
 
-		[_displayLink setFrameInterval:animationFrameInterval];
-	}
+        [_displayLink setFrameInterval:animationFrameInterval];
+    }
 #endif
 #if FALLBACK_LOOP_TYPE == NSTIMER_BASED_LOOP
-	if (_displayLink == 0 && _timer)
-		_need_recreate_timer = true;
+    if (_displayLink == 0 && _timer)
+        _need_recreate_timer = true;
 #endif
 }
 
@@ -527,255 +496,256 @@ void NotifyFramerateChange(int targetFPS)
 
 @implementation AppController
 
-- (void) registerAccelerometer
-{
-	// NOTE: work-around for accelerometer sometimes failing to register (presumably on older devices)
-	// set accelerometer delegate to nil first
-	// work-around reported by Brian Robbins
-
-	[[UIAccelerometer sharedAccelerometer] setDelegate:nil];
-	int frequency = UnityGetAccelerometerFrequency();
-
-	if (frequency > 0)
-	{
-		const float accelerometerFrequency = frequency;
-		[[UIAccelerometer sharedAccelerometer] setUpdateInterval:(1.0 / accelerometerFrequency)];
-		[[UIAccelerometer sharedAccelerometer] setDelegate:self];
-	}
-}
-
 - (void) RepaintDisplayLink
 {
 #if USE_DISPLAY_LINK_IF_AVAILABLE
-	[_displayLink setPaused: YES];
+    [_displayLink setPaused: YES];
 
-	static const CFStringRef kTrackingRunLoopMode = CFStringRef(UITrackingRunLoopMode);
-	while (CFRunLoopRunInMode(kTrackingRunLoopMode, kInputProcessingTime, TRUE) == kCFRunLoopRunHandledSource)
-		;
+    static const CFStringRef kTrackingRunLoopMode = CFStringRef(UITrackingRunLoopMode);
+    while (CFRunLoopRunInMode(kTrackingRunLoopMode, kInputProcessingTime, TRUE) == kCFRunLoopRunHandledSource)
+        ;
 
-	[_displayLink setPaused: NO];
-	[self Repaint];
+    [_displayLink setPaused: NO];
+    [self Repaint];
 #endif
 }
 
 - (void) Repaint
 {
-	if(_didResignActive)
-		return;
+    if(_didResignActive)
+        return;
 
-	if( _surface.systemRenderbuffer == 0 )
-		RecreateSurface(&_surface, true);
+    if( _surface.systemRenderbuffer == 0 || _recreateSurface)
+    {
+        RecreateSurface(&_surface, true);
+        _recreateSurface = false;
+    }
 
-	Profiler_UnityLoopStart();
-	UnityInputProcess();
-	UnityPlayerLoop();
-	Profiler_UnityLoopEnd();
+    Profiler_FrameStart();
+    UnityInputProcess();
+    UnityPlayerLoop();
 
-	CheckOrientationRequest();
+    CheckOrientationRequest();
 
-	if (UnityGetAccelerometerFrequency() > 0 && (!_accelerometerIsActive || ([UIAccelerometer sharedAccelerometer].delegate == nil)))
-	{
-		static int frameCounter = 0;
-		if (frameCounter <= 0)
-		{
-			// NOTE: work-around for accelerometer sometimes failing to register (presumably on older devices)
-			// sometimes even Brian Robbins work-around doesn't help
-			// then we will try to register accelerometer every N frames until we succeed
+    if (UnityGetAccelerometerFrequency() > 0 && (!_accelerometerIsActive || ([UIAccelerometer sharedAccelerometer].delegate == nil)))
+    {
+        static int frameCounter = 0;
+        if (frameCounter <= 0)
+        {
+            // NOTE: work-around for accelerometer sometimes failing to register (presumably on older devices)
+            // sometimes even Brian Robbins work-around doesn't help
+            // then we will try to register accelerometer every N frames until we succeed
 
-			printf_console("-> force accelerometer registration\n");
-			[self registerAccelerometer];
-			frameCounter = 90; // try every ~3 seconds
-		}
-		--frameCounter;
-	}
+            printf_console("-> force accelerometer registration\n");
+            [self registerAccelerometer];
+            frameCounter = 90; // try every ~3 seconds
+        }
+        --frameCounter;
+    }
 
 #if FALLBACK_LOOP_TYPE == NSTIMER_BASED_LOOP
-	if (_displayLink == 0 && _timer && _need_recreate_timer)
-	{
-		[_timer invalidate];
-		_timer = [NSTimer scheduledTimerWithTimeInterval:(1.0 / (UnityGetTargetFPS() * kThrottleFPS)) target:self selector:@selector(Repaint) userInfo:nil repeats:YES];
+    if (_displayLink == 0 && _timer && _need_recreate_timer)
+    {
+        [_timer invalidate];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:(1.0 / (UnityGetTargetFPS() * kThrottleFPS)) target:self selector:@selector(Repaint) userInfo:nil repeats:YES];
 
-		_need_recreate_timer = false;
-	}
+        _need_recreate_timer = false;
+    }
 #endif
 
 }
 
 - (void) startRendering
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 #if FALLBACK_LOOP_TYPE == THREAD_BASED_LOOP
-	const double OneMillisecond = 1.0 / 1000.0;
-	for (;;)
-	{
-		const double SecondsPerFrame = 1.0 / (float)UnityGetTargetFPS();
-		const double frameStartTime  = (double)CFAbsoluteTimeGetCurrent();
-		[self performSelectorOnMainThread:@selector(Repaint) withObject:nil waitUntilDone:YES];
+    const double OneMillisecond = 1.0 / 1000.0;
+    for (;;)
+    {
+        const double SecondsPerFrame = 1.0 / (float)UnityGetTargetFPS();
+        const double frameStartTime  = (double)CFAbsoluteTimeGetCurrent();
+        [self performSelectorOnMainThread:@selector(Repaint) withObject:nil waitUntilDone:YES];
 
-		double secondsToProcessEvents = SecondsPerFrame - (((double)CFAbsoluteTimeGetCurrent()) - frameStartTime);
-		// if we run considerably slower than desired framerate anyhow
-		// then we should sleep for a while leaving OS some room to process events
-		if (secondsToProcessEvents < -OneMillisecond)
-			secondsToProcessEvents = OneMillisecond;
-		if (secondsToProcessEvents > 0)
-			[NSThread sleepForTimeInterval:secondsToProcessEvents];
-	}
+        double secondsToProcessEvents = SecondsPerFrame - (((double)CFAbsoluteTimeGetCurrent()) - frameStartTime);
+        // if we run considerably slower than desired framerate anyhow
+        // then we should sleep for a while leaving OS some room to process events
+        if (secondsToProcessEvents < -OneMillisecond)
+            secondsToProcessEvents = OneMillisecond;
+        if (secondsToProcessEvents > 0)
+            [NSThread sleepForTimeInterval:secondsToProcessEvents];
+    }
 
 #elif FALLBACK_LOOP_TYPE == EVENT_PUMP_BASED_LOOP
 
-	int eventLoopTimeOuts = 0;
-	const double SecondsPerFrameToProcessEvents = 0.001 * (double)kMillisecondsPerFrameToProcessEvents;
-	for (;;)
-	{
-		const double SecondsPerFrame = 1.0 / (float)UnityGetTargetFPS();
-		const double frameStartTime  = (double)CFAbsoluteTimeGetCurrent();
-		[self Repaint];
+    int eventLoopTimeOuts = 0;
+    const double SecondsPerFrameToProcessEvents = 0.001 * (double)kMillisecondsPerFrameToProcessEvents;
+    for (;;)
+    {
+        const double SecondsPerFrame = 1.0 / (float)UnityGetTargetFPS();
+        const double frameStartTime  = (double)CFAbsoluteTimeGetCurrent();
+        [self Repaint];
 
-		if (kMillisecondsPerFrameToProcessEvents <= 0)
-		{
-			while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE) == kCFRunLoopRunHandledSource);
-		}
-		else
-		{
-			double secondsToProcessEvents = SecondsPerFrame - (((double)CFAbsoluteTimeGetCurrent()) - frameStartTime);
-			if(secondsToProcessEvents < SecondsPerFrameToProcessEvents)
-				secondsToProcessEvents = SecondsPerFrameToProcessEvents;
+        if (kMillisecondsPerFrameToProcessEvents <= 0)
+        {
+            while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE) == kCFRunLoopRunHandledSource);
+        }
+        else
+        {
+            double secondsToProcessEvents = SecondsPerFrame - (((double)CFAbsoluteTimeGetCurrent()) - frameStartTime);
+            if(secondsToProcessEvents < SecondsPerFrameToProcessEvents)
+                secondsToProcessEvents = SecondsPerFrameToProcessEvents;
 
-			if (CFRunLoopRunInMode(kCFRunLoopDefaultMode, secondsToProcessEvents, FALSE) == kCFRunLoopRunTimedOut)
-				++eventLoopTimeOuts;
-		}
-	}
+            if (CFRunLoopRunInMode(kCFRunLoopDefaultMode, secondsToProcessEvents, FALSE) == kCFRunLoopRunTimedOut)
+                ++eventLoopTimeOuts;
+        }
+    }
 
 #endif
 
-	[pool release];
+    [pool release];
 }
 
 - (void) prepareRunLoop
 {
-	UnityLoadApplication();
-	Profiler_InitProfiler();
-	InitGLES();
+    UnityLoadApplication();
+    Profiler_InitProfiler();
+    InitGLES();
 
-	_unityLevelReady = true;
-	OnUnityReady();
+    _unityLevelReady = true;
+    OnUnityReady();
 
-	_displayLink = nil;
+    _displayLink = nil;
 #if USE_DISPLAY_LINK_IF_AVAILABLE
-	// A system version of 3.1 or greater is required to use CADisplayLink. The NSTimer
-	// class is used as fallback when it isn't available.
-	if (_ios31orNewer)
-	{
-		// Frame interval defines how many display frames must pass between each time the
-		// display link fires.
-		int animationFrameInterval = 60.0 / (float)UnityGetTargetFPS();
-		assert(animationFrameInterval >= 1);
+    // A system version of 3.1 or greater is required to use CADisplayLink. The NSTimer
+    // class is used as fallback when it isn't available.
+    if (_ios31orNewer)
+    {
+        // Frame interval defines how many display frames must pass between each time the
+        // display link fires.
+        int animationFrameInterval = 60.0 / (float)UnityGetTargetFPS();
+        assert(animationFrameInterval >= 1);
 
-		_displayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(RepaintDisplayLink)];
-		[_displayLink setFrameInterval:animationFrameInterval];
-		[_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-	}
+        _displayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(RepaintDisplayLink)];
+        [_displayLink setFrameInterval:animationFrameInterval];
+        [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    }
 #endif
 
-	if (_displayLink == nil)
-	{
+    if (_displayLink == nil)
+    {
 #if FALLBACK_LOOP_TYPE == NSTIMER_BASED_LOOP
-		_timer = [NSTimer scheduledTimerWithTimeInterval:(1.0 / (UnityGetTargetFPS() * kThrottleFPS)) target:self selector:@selector(Repaint) userInfo:nil repeats:YES];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:(1.0 / (UnityGetTargetFPS() * kThrottleFPS)) target:self selector:@selector(Repaint) userInfo:nil repeats:YES];
 #endif
-	}
+    }
 
-	[self registerAccelerometer];
+    [self registerAccelerometer];
 
-	KeyboardOnScreen::Init();
+    KeyboardOnScreen::Init();
 
-	if (_displayLink == nil)
-	{
+    if (_displayLink == nil)
+    {
 #if FALLBACK_LOOP_TYPE == THREAD_BASED_LOOP
-		[NSThread detachNewThreadSelector:@selector(startRendering) toTarget:self withObject:nil];
+        [NSThread detachNewThreadSelector:@selector(startRendering) toTarget:self withObject:nil];
 #elif FALLBACK_LOOP_TYPE == EVENT_PUMP_BASED_LOOP
-		[self performSelectorOnMainThread:@selector(startRendering) withObject:nil waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(startRendering) withObject:nil waitUntilDone:NO];
 #endif
-	}
+    }
 
-	// immediately render 1st frame in order to avoid occasional black screen
-	// we do it twice to fill both buffers with meaningful contents.
-	// set proper orientation right away?
-	[self Repaint];
-	[self Repaint];
+    // immediately render 1st frame in order to avoid occasional black screen
+    // we do it twice to fill both buffers with meaningful contents.
+    // set proper orientation right away?
+    [self Repaint];
+    [self Repaint];
 }
 
 
 - (void) startUnity:(UIApplication*)application
 {
-	if( [ [[UIDevice currentDevice] systemVersion] compare: @"3.0" options: NSNumericSearch ] != NSOrderedAscending )
-		_ios30orNewer = true;
+    if( [ [[UIDevice currentDevice] systemVersion] compare: @"3.0" options: NSNumericSearch ] != NSOrderedAscending )
+        _ios30orNewer = true;
 
-	if( [ [[UIDevice currentDevice] systemVersion] compare: @"3.1" options: NSNumericSearch ] != NSOrderedAscending )
-		_ios31orNewer = true;
+    if( [ [[UIDevice currentDevice] systemVersion] compare: @"3.1" options: NSNumericSearch ] != NSOrderedAscending )
+        _ios31orNewer = true;
 
-	if( [ [[UIDevice currentDevice] systemVersion] compare: @"4.3" options: NSNumericSearch ] != NSOrderedAscending )
-		_ios43orNewer = true;
+    if( [ [[UIDevice currentDevice] systemVersion] compare: @"4.3" options: NSNumericSearch ] != NSOrderedAscending )
+        _ios43orNewer = true;
 
-	if( [ [[UIDevice currentDevice] systemVersion] compare: @"5.0" options: NSNumericSearch ] != NSOrderedAscending )
-		_ios50orNewer = true;
+    if( [ [[UIDevice currentDevice] systemVersion] compare: @"5.0" options: NSNumericSearch ] != NSOrderedAscending )
+        _ios50orNewer = true;
 
-	char const* appPath = [[[NSBundle mainBundle] bundlePath]UTF8String];
-	UnityInitApplication(appPath);
+    if( [ [[UIDevice currentDevice] systemVersion] compare: @"6.0" options: NSNumericSearch ] != NSOrderedAscending )
+        _ios60orNewer = true;
 
-	OnUnityStartLoading();
-	[self performSelector:@selector(prepareRunLoop) withObject:nil afterDelay:0];
+    char const* appPath = [[[NSBundle mainBundle] bundlePath]UTF8String];
+    UnityInitApplication(appPath);
+
+    OnUnityStartLoading();
+    [self performSelector:@selector(prepareRunLoop) withObject:nil afterDelay:0];
+}
+
+- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+{
+    // UIInterfaceOrientationMaskAll
+    // it is the safest way of doing it:
+    // - GameCenter and some other services might have portrait-only variant
+    //     and will throw exception if portrait is not supported here
+    // - When you change allowed orientations if you end up forbidding current one
+    //     exception will be thrown
+    // Anyway this is intersected with values provided from UIViewController, so we are good
+    return   (1 << UIInterfaceOrientationPortrait) | (1 << UIInterfaceOrientationPortraitUpsideDown)
+           | (1 << UIInterfaceOrientationLandscapeRight) | (1 << UIInterfaceOrientationLandscapeLeft);
 }
 
 - (void)application:(UIApplication*)application didReceiveLocalNotification:(UILocalNotification*)notification
 {
-	UnitySendLocalNotification(notification);
+    UnitySendLocalNotification(notification);
 }
 
 - (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 {
-	UnitySendRemoteNotification(userInfo);
+    UnitySendRemoteNotification(userInfo);
 }
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
-	UnitySendDeviceToken(deviceToken);
+    UnitySendDeviceToken(deviceToken);
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
 {
-	UnitySendRemoteNotificationError(error);
+    UnitySendRemoteNotificationError(error);
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
-	printf_console("-> applicationDidFinishLaunching()\n");
-	// get local notification
-	if (&UIApplicationLaunchOptionsLocalNotificationKey != nil)
-	{
-		UILocalNotification *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-		if (notification)
-		{
-			UnitySendLocalNotification(notification);
-		}
-	}
+    printf_console("-> applicationDidFinishLaunching()\n");
+    // get local notification
+    if (&UIApplicationLaunchOptionsLocalNotificationKey != nil)
+    {
+        UILocalNotification *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+        if (notification)
+        {
+            UnitySendLocalNotification(notification);
+        }
+    }
 
-	// get remote notification
-	if (&UIApplicationLaunchOptionsRemoteNotificationKey != nil)
-	{
-		NSDictionary *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-		if (notification)
-		{
-			UnitySendRemoteNotification(notification);
-		}
-	}
+    // get remote notification
+    if (&UIApplicationLaunchOptionsRemoteNotificationKey != nil)
+    {
+        NSDictionary *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        if (notification)
+        {
+            UnitySendRemoteNotification(notification);
+        }
+    }
 
-	if ([UIDevice currentDevice].generatesDeviceOrientationNotifications == NO)
-		[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    if ([UIDevice currentDevice].generatesDeviceOrientationNotifications == NO)
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
-	[self startUnity:application];
+    [self startUnity:application];
 
-	return NO;
+    return NO;
 }
 
 // For iOS 4
@@ -784,7 +754,7 @@ void NotifyFramerateChange(int targetFPS)
 //   applicationDidEnterBackground()
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-	printf_console("-> applicationDidEnterBackground()\n");
+    printf_console("-> applicationDidEnterBackground()\n");
 }
 
 // For iOS 4
@@ -793,56 +763,49 @@ void NotifyFramerateChange(int targetFPS)
 //   applicationDidBecomeActive()
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-	printf_console("-> applicationWillEnterForeground()\n");
+    printf_console("-> applicationWillEnterForeground()\n");
 }
 
 - (void) applicationDidBecomeActive:(UIApplication*)application
 {
-	printf_console("-> applicationDidBecomeActive()\n");
-	if (_didResignActive)
-		UnityPause(false);
+    printf_console("-> applicationDidBecomeActive()\n");
+    if (_didResignActive)
+        UnityPause(false);
 
-	_didResignActive = NO;
+    _didResignActive = NO;
 }
 
 - (void) applicationWillResignActive:(UIApplication*)application
 {
-	printf_console("-> applicationWillResignActive()\n");
-	UnityPause(true);
+    printf_console("-> applicationWillResignActive()\n");
+    UnityPause(true);
 
-	_didResignActive = YES;
+    _didResignActive = YES;
 }
 
 - (void) applicationDidReceiveMemoryWarning:(UIApplication*)application
 {
-	printf_console("WARNING -> applicationDidReceiveMemoryWarning()\n");
+    printf_console("WARNING -> applicationDidReceiveMemoryWarning()\n");
 }
 
 - (void) applicationWillTerminate:(UIApplication*)application
 {
-	printf_console("-> applicationWillTerminate()\n");
+    printf_console("-> applicationWillTerminate()\n");
 
-	Profiler_UninitProfiler();
+    Profiler_UninitProfiler();
 
-	UnityCleanup();
+    UnityCleanup();
 }
 
 - (void) dealloc
 {
-	DestroySurface(&_surface);
-	[_context release];
-	_context = nil;
+    DestroySurface(&_surface);
+    [_context release];
+    _context = nil;
 
-	ReleaseViewHierarchy();
-	[super dealloc];
+    ReleaseViewHierarchy();
+    [super dealloc];
 }
-
-- (void) accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration
-{
-	UnityDidAccelerate(acceleration.x, acceleration.y, acceleration.z, acceleration.timestamp);
-	_accelerometerIsActive = YES;
-}
-
 @end
 
 

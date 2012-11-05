@@ -18,8 +18,6 @@ struct UnityFrameStats;
 
 void Profiler_InitProfiler();
 void Profiler_UninitProfiler();
-void Profiler_UnityLoopStart();
-void Profiler_UnityLoopEnd();
 void Profiler_FrameStart();
 void Profiler_FrameEnd();
 void Profiler_FrameUpdate(const struct UnityFrameStats*);
@@ -32,8 +30,6 @@ void Profiler_EndMSAAResolve();
 
 inline void Profiler_InitProfiler()								{}
 inline void Profiler_UninitProfiler()							{}
-inline void Profiler_UnityLoopStart() 							{}
-inline void Profiler_UnityLoopEnd() 							{}
 inline void Profiler_FrameStart() 								{}
 inline void Profiler_FrameEnd() 								{}
 inline void Profiler_FrameUpdate(const struct UnityFrameStats*) {}
