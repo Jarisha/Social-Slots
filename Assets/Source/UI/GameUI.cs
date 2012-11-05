@@ -112,6 +112,7 @@ public class GameUI : MonoBehaviour {
 				if(spinData.wheelReward > 0) {
 					spinner.ClearForMark(stop);
 					ContentManager.Instance.Player.IncrementCredits(spinData.wheelReward);
+					UpdateLabels();
 				}
 			});
 			yield return new WaitForSeconds(2.2f);
